@@ -1,18 +1,39 @@
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms'; // Import FormsModule
 import * as L from 'leaflet';
+import { HttpClientModule, HttpClient } from '@angular/common/http';
+import { Intersection } from '../intersection';
+import { Road } from '../road';
 
 @Component({
   selector: 'app-map',
   templateUrl: './map.component.html',
   styleUrls: ['./map.component.css'],
-  imports: [FormsModule]
+  imports: [FormsModule, HttpClientModule]
 })
 export class MapComponent {
   private map!: L.Map;
+  private baseLink = 'http://localhost:8080/api/map/'; // the link to the map API
   private markersGroup!: L.LayerGroup;
   mapName: string = ''; // Bound to the input field
   allowedMapsToDisplay = ['petitPlan.json', 'moyenPlan.json', 'grandPlan.json'];
+
+  constructor(private http: HttpClient) { }
+
+  // API calls
+  getIntersections() {
+    const url = `${this.baseLink}intersections`;
+    this.http.get<Intersection>(url).subscribe(data => {
+      console.log(data);
+    });
+  }
+
+  getRoads() {
+    const url = `${this.baseLink}roads`;
+    this.http.get<Road>(url).subscribe(data => {
+      console.log(data);
+    });
+  }
 
   isTextValid(): boolean {
     return this.allowedMapsToDisplay.includes(this.mapName);
