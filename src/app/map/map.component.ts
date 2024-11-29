@@ -2,18 +2,42 @@ import { Component } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { FormsModule } from '@angular/forms'; // Import FormsModule
 import * as L from 'leaflet';
+import { HttpClientModule, HttpClient } from '@angular/common/http';
+import { Intersection } from '../intersection';
+import { Road } from '../road';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-map',
   templateUrl: './map.component.html',
   styleUrls: ['./map.component.css'],
-  imports: [FormsModule]
+  imports: [FormsModule, HttpClientModule]
 })
 export class MapComponent {
   private map!: L.Map;
+  private baseLink = 'http://localhost:8080/api/map/'; // the link to the map API
   private markersGroup!: L.LayerGroup;
   mapName: string = ''; // Bound to the input field
   allowedMapsToDisplay = ['petitPlan.json', 'moyenPlan.json', 'grandPlan.json'];
+
+  constructor(private http: HttpClient) { }
+
+  // API calls
+  getIntersections() : Observable<Intersection[]> {
+    const url = `${this.baseLink}intersections`;
+    // this.http.get<Intersection>(url).subscribe(data => {
+    //   console.log(data);
+    // });
+    return this.http.get<Intersection[]>(url);
+  }
+
+  getRoads() : Observable<Road[]> {
+    const url = `${this.baseLink}roads`;
+    // this.http.get<Road[]>(url).subscribe(data => {
+    //   console.log(data);
+    // });
+    return this.http.get<Road[]>(url);
+  }
 
   isTextValid(): boolean {
     return this.allowedMapsToDisplay.includes(this.mapName);
@@ -63,13 +87,9 @@ export class MapComponent {
   }
 
   private addIntersections(): void { 
-    // Assuming the JSON file is located at 'data.json'
-    fetch('mapJson/' + this.mapName)
-    .then(response => response.json())  // Parse the response as JSON
-    .then(mapJson => {
-      console.log(mapJson.reseau.noeud);  // Use the JSON data here
+    this.getIntersections().subscribe((mapJson: Intersection[]) => {
 
-      var locations = mapJson.reseau.noeud;
+      var locations: Intersection[] = mapJson;
       console.log(locations);
 
       var customIcon = L.icon({
@@ -77,31 +97,25 @@ export class MapComponent {
         iconSize: [16, 16] // Adjust size as needed
       });
 
-      interface Location {
-        "-latitude": string;
-        "-longitude": string;
-        "-id": string;
-      }
 
       // Create a LayerGroup
       this.markersGroup = L.layerGroup().addTo(this.map);
 
       // Add a marker to the map
-      locations.forEach((location: Location) => {
-        var marker = L.marker([Number(location["-latitude"]), Number(location["-longitude"])], { icon: customIcon }).addTo(this.markersGroup);
-        // Capture click event on the marker
+      locations.forEach((location) => {
+        var marker = L.marker([Number(location.latitude), Number(location.longitude)], { icon: customIcon }).addTo(this.markersGroup);
+        
         marker.on('click', (event) => {
-          console.log('Marker ' + location["-id"] + ' clicked!', event);
-          alert('Marker ' + location["-id"] + ' clicked!');
+          console.log('Marker ' + location.id + ' clicked!', event);
+          alert('Marker ' + location.id + ' clicked!');
         });
 
         // Add a popup to the marker on a mouseover event
         marker.on('mouseover', (event) => {
-          marker.bindPopup('Marker ' + location["-id"]).openPopup();
+          marker.bindPopup('Marker ' + location.id).openPopup();
         });
       });
-    })
-    .catch(error => console.error('Error loading JSON:', error));
+    });
   }
 
   addRoads(): void {

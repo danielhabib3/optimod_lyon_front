@@ -5,5 +5,11 @@
     <button [disabled]="this.mapReset || !this.mapOpened" (click)="resetMap()">Reset Map</button>
 </div>
 
-<div id="map" style="height: 300px; width: 50%;"></div>
 
+<div>
+    <p>only for tests, to be deleted later</p>
+    <button (click)="getIntersections()">send api call to get intersections</button>
+    <button (click)="getRoads()">send api call to get roads</button>
+</div>
+
+<div id="map" style="height: 300px; width: 50%;"></div>
