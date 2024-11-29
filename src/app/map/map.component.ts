@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
 import { FormsModule } from '@angular/forms'; // Import FormsModule
 import * as L from 'leaflet';
 import { HttpClientModule, HttpClient } from '@angular/common/http';
@@ -119,50 +118,19 @@ export class MapComponent {
   }
 
   addRoads(): void {
-    fetch('mapJson/' + this.mapName)
-    .then(response => response.json())  // Parse the response as JSON
-    .then(mapJson => {
-      console.log(mapJson.reseau.noeud);  // Use the JSON data here
+    this.getRoads().subscribe((mapJson: Road[]) => {
 
-      var locations = mapJson.reseau.noeud;
-      var roads = mapJson.reseau.troncon;
+      var roads: Road[] = mapJson;
       console.log(roads);
-
-
-      interface Location {
-        "-latitude": string;
-        "-longitude": string;
-        "-id": string;
-      }
-
-      interface Road {
-        "-destination": string;
-        "-nomRue": string;
-        "-origine": string;
-        "-longueur": string;
-      }
-
 
       // Add a marker to the map
       roads.forEach((road: Road) => {
-        var origin: Location | null = null;
-        var destination: Location | null = null;
-        locations.forEach((location: Location) => {
-          if (location["-id"] == road["-origine"]) {
-            origin = location;
-          }
-          if (location["-id"] == road["-destination"]) {
-            destination = location;
-          }
-        });
+        var origin: Intersection = road.origin;
+        var destination: Intersection = road.destination;
         // Draw a line between the two points
-        if (origin && destination) {
-          var line = L.polyline([[Number(origin["-latitude"]), Number(origin["-longitude"])], [Number(destination["-latitude"]), Number(destination["-longitude"])]], { color: 'blue' }).addTo(this.markersGroup);
-        } else {
-          console.error('Origin or destination not found for road:', road);
-        }
+        var line = L.polyline([[Number(origin.latitude), Number(origin.longitude)], [Number(destination.latitude), Number(destination.longitude)]], { color: 'blue' }).addTo(this.markersGroup);
+       
       });
-    })
-    .catch(error => console.error('Error loading JSON:', error));
+    });
   }
 }
