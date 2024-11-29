@@ -1,0 +1,9 @@
+<div>
+    <label for="mapNameJson">Please Enter the Map you want to charge:</label>
+    <input id="mapNameJson" name="mapNameJson" [(ngModel)]="mapName" placeholder="Enter text" />
+    <button [disabled]="!isTextValid()" (click)="chooseMap()">Submit</button>
+    <button [disabled]="this.mapReset || !this.mapOpened" (click)="resetMap()">Reset Map</button>
+</div>
+
+<div id="map" style="height: 300px; width: 50%;"></div>
+
