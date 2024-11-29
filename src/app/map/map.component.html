@@ -1,15 +1,46 @@
-<div>
-    <label for="mapNameJson">Please Enter the Map you want to charge:</label>
-    <input id="mapNameJson" name="mapNameJson" [(ngModel)]="mapName" placeholder="Enter text" />
-    <button [disabled]="!isTextValid()" (click)="chooseMap()">Submit</button>
-    <button [disabled]="this.mapReset || !this.mapOpened" (click)="resetMap()">Reset Map</button>
+<div style="display: flex; height: 100vh;">
+    <!-- Sidebar -->
+    <div style="width: 300px; padding: 20px; background-color: #f8f9fa; box-shadow: 2px 0 5px rgba(0,0,0,0.1);">
+        <h2>Delivery Tour Optimizer</h2>
+        
+        <!-- Load Map Section -->
+        <div style="margin-bottom: 20px;">
+            <h3>Load Map</h3>
+            <label for="mapFile" style="display: block; margin-bottom: 5px;">Select XML File:</label>
+            <input type="file" id="mapFile" name="mapFile" (change)="chooseMap()" style="display: block; width: 100%;" />
+        </div>
+
+        <!-- Manage Couriers Section -->
+        <div style="margin-bottom: 20px;">
+            <h3>Manage Couriers</h3>
+            <label for="courierCount" style="display: block; margin-bottom: 5px;">Number of Couriers:</label>
+            <input type="number" id="courierCount" name="courierCount" min="1" style="display: block; width: 100%;" />
+        </div>
+
+        <!-- Delivery Requests Section -->
+        <div style="margin-bottom: 20px;">
+            <h3>Delivery Requests</h3>
+            <label for="courierSelect" style="display: block; margin-bottom: 5px;">Select Courier:</label>
+            <select id="courierSelect" name="courierSelect" style="display: block; width: 100%; margin-bottom: 10px;">
+                <option *ngFor="let courier of couriers" [value]="courier.id">{{ courier.name }}</option>
+            </select>
+            <label for="pickupLocation" style="display: block; margin-bottom: 5px;">Pickup Location:</label>
+            <input id="pickupLocation" name="pickupLocation" placeholder="Enter address" style="display: block; width: 100%; margin-bottom: 10px;" />
+            <label for="deliveryLocation" style="display: block; margin-bottom: 5px;">Delivery Location:</label>
+            <input id="deliveryLocation" name="deliveryLocation" placeholder="Enter address" style="display: block; width: 100%; margin-bottom: 10px;" />
+            <button style="display: block; width: 100%;">Add Delivery Request</button>
+        </div>
+
+        <!-- Save/Restore Tours Section -->
+        <div>
+            <h3>Save/Restore Tours</h3>
+            <button style="display: block; width: 100%; margin-bottom: 10px;">Save Tours</button>
+            <button style="display: block; width: 100%;">Restore Tours</button>
+        </div>
+    </div>
+
+    <!-- Main Content Area -->
+    <div style="flex-grow: 1; position: relative;">
+        <div id="map" style="width: 100%; height: 100%;"></div>
+    </div>
 </div>
-
-
-<div>
-    <p>only for tests, to be deleted later</p>
-    <button (click)="getIntersections()">send api call to get intersections</button>
-    <button (click)="getRoads()">send api call to get roads</button>
-</div>
-
-<div id="map" style="height: 300px; width: 50%;"></div>
