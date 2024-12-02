@@ -37,6 +37,10 @@ export class MapComponent {
           alert('Error while parsing the XML file');
           return;
         }
+        if (data.intersections.length === 0 && data.roads.length === 0) {
+          alert('No data found in the XML file or the XML file is not well formatted as a map, no roads or intersections found');
+          return;
+        }
         this.loadMap(data);
       });    
     } else {
@@ -91,7 +95,7 @@ export class MapComponent {
 
     var customIcon = L.icon({
       iconUrl: iconPath,
-      iconSize: [16, 16] // Adjust size as needed
+      iconSize: [6, 6] // Adjust size as needed
     });
 
 
