@@ -24,7 +24,7 @@ export class MapComponent {
   constructor(private http: HttpClient) { }
 
   // function that gets the xml from the front, and sends it to the backend to parse
-  private sendXMLtoBack() {
+  sendXMLtoBack() {
     this.mapFile = (document.getElementById('mapFile') as HTMLInputElement).files![0];
     // check if the file is an xml file
     if (this.mapFile && this.mapFile.type === 'text/xml') { 
