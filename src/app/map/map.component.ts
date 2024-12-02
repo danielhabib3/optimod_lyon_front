@@ -32,7 +32,11 @@ export class MapComponent {
       const formData = new FormData();
       formData.append('file', this.mapFile);
       this.http.post<Map>(`${this.baseLink}parse`, formData).subscribe((data) => {
-        console.log(data); // TODO remove
+        console.log("data "+ data); // TODO remove
+        if(!data) {
+          alert('Error while parsing the XML file');
+          return;
+        }
         this.loadMap(data);
       });    
     } else {
