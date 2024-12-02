@@ -19,7 +19,8 @@ export class MapComponent {
   private markersGroup!: L.LayerGroup;
   mapFile: File | null = null; // xml file of the map 
   allowedMapsToDisplay = ['petitPlan.json', 'moyenPlan.json', 'grandPlan.json'];
-  mapOpened = false;
+  mapOpened: boolean = false;
+  mapReset: boolean = true;
 
   constructor(private http: HttpClient) { }
 
@@ -52,8 +53,6 @@ export class MapComponent {
     this.addRoads(data.roads);
     this.mapReset = false;
   }
-
-  mapReset: boolean = true;
 
   private resetMap() : void {
     this.removeMarkers();
