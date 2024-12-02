@@ -2,12 +2,13 @@
     <!-- Sidebar -->
     <div style="width: 300px; padding: 20px; background-color: #f8f9fa; box-shadow: 2px 0 5px rgba(0,0,0,0.1);">
         <h2>Delivery Tour Optimizer</h2>
-        
+
         <!-- Load Map Section -->
         <div style="margin-bottom: 20px;">
             <h3>Load Map</h3>
             <label for="mapFile" style="display: block; margin-bottom: 5px;">Select XML File:</label>
-            <input type="file" id="mapFile" name="mapFile" (change)="chooseMap()" style="display: block; width: 100%;" />
+            <input type="file" id="mapFile" name="mapFile" (change)="sendXMLtoBack()"
+                style="display: block; width: 100%;" />
         </div>
 
         <!-- Manage Couriers Section -->
@@ -25,9 +26,11 @@
                 <option *ngFor="let courier of couriers" [value]="courier.id">{{ courier.name }}</option>
             </select>
             <label for="pickupLocation" style="display: block; margin-bottom: 5px;">Pickup Location:</label>
-            <input id="pickupLocation" name="pickupLocation" placeholder="Enter address" style="display: block; width: 100%; margin-bottom: 10px;" />
+            <input id="pickupLocation" name="pickupLocation" placeholder="Enter address"
+                style="display: block; width: 100%; margin-bottom: 10px;" />
             <label for="deliveryLocation" style="display: block; margin-bottom: 5px;">Delivery Location:</label>
-            <input id="deliveryLocation" name="deliveryLocation" placeholder="Enter address" style="display: block; width: 100%; margin-bottom: 10px;" />
+            <input id="deliveryLocation" name="deliveryLocation" placeholder="Enter address"
+                style="display: block; width: 100%; margin-bottom: 10px;" />
             <button style="display: block; width: 100%;">Add Delivery Request</button>
         </div>
 

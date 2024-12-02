@@ -5,6 +5,7 @@ import { HttpClientModule, HttpClient } from '@angular/common/http';
 import { Intersection } from '../intersection';
 import { Road } from '../road';
 import { Observable } from 'rxjs';
+import { Map } from '../map';
 
 @Component({
   selector: 'app-map',
@@ -16,34 +17,29 @@ export class MapComponent {
   private map!: L.Map;
   private baseLink = 'http://localhost:8080/api/map/'; // the link to the map API
   private markersGroup!: L.LayerGroup;
-  mapName: string = ''; // Bound to the input field
+  mapFile: File | null = null; // xml file of the map 
   allowedMapsToDisplay = ['petitPlan.json', 'moyenPlan.json', 'grandPlan.json'];
+  mapOpened = false;
 
   constructor(private http: HttpClient) { }
 
-  // API calls
-  getIntersections() : Observable<Intersection[]> {
-    const url = `${this.baseLink}intersections`;
-    // this.http.get<Intersection>(url).subscribe(data => {
-    //   console.log(data);
-    // });
-    return this.http.get<Intersection[]>(url);
+  // function that gets the xml from the front, and sends it to the backend to parse
+  private sendXMLtoBack() {
+    this.mapFile = (document.getElementById('mapFile') as HTMLInputElement).files![0];
+    // check if the file is an xml file
+    if (this.mapFile && this.mapFile.type === 'text/xml') { 
+      const formData = new FormData();
+      formData.append('file', this.mapFile);
+      this.http.post<Map>(`${this.baseLink}parse`, formData).subscribe((data) => {
+        console.log(data); // TODO remove
+        this.loadMap(data);
+      });    
+    } else {
+      alert('Please select an XML file');
+    }
   }
 
-  getRoads() : Observable<Road[]> {
-    const url = `${this.baseLink}roads`;
-    // this.http.get<Road[]>(url).subscribe(data => {
-    //   console.log(data);
-    // });
-    return this.http.get<Road[]>(url);
-  }
-
-  isTextValid(): boolean {
-    return this.allowedMapsToDisplay.includes(this.mapName);
-  }
-
-  mapOpened = false;
-  chooseMap() {
+  private loadMap(data : Map) {
     if(!this.mapOpened) {
       this.mapOpened = true;
       this.initMap();
@@ -52,19 +48,19 @@ export class MapComponent {
       this.removeMarkers();
     }
     
-    this.addIntersections();
-    this.addRoads();
+    this.addIntersections(data.intersections, "marker.svg"); 
+    this.addRoads(data.roads);
     this.mapReset = false;
   }
 
   mapReset: boolean = true;
 
-  resetMap() : void {
+  private resetMap() : void {
     this.removeMarkers();
     this.mapReset = true;
   }
 
-  removeMarkers(): void {
+  private removeMarkers(): void {
     if (this.markersGroup) {
       this.map.removeLayer(this.markersGroup); // Removes the group from the map
       this.markersGroup.clearLayers(); // Removes all markers within the group
@@ -86,52 +82,44 @@ export class MapComponent {
     }).addTo(this.map);
   }
 
-  private addIntersections(): void { 
-    this.getIntersections().subscribe((mapJson: Intersection[]) => {
+  private addIntersections(locations : Intersection[], iconPath : string): void { 
 
-      var locations: Intersection[] = mapJson;
-      console.log(locations);
+    console.log(locations);
 
-      var customIcon = L.icon({
-        iconUrl: "marker.svg",
-        iconSize: [16, 16] // Adjust size as needed
+    var customIcon = L.icon({
+      iconUrl: iconPath,
+      iconSize: [16, 16] // Adjust size as needed
+    });
+
+
+    // Create a LayerGroup
+    this.markersGroup = L.layerGroup().addTo(this.map);
+
+    // Add a marker to the map
+    locations.forEach((location) => {
+      var marker = L.marker([Number(location.latitude), Number(location.longitude)], { icon: customIcon }).addTo(this.markersGroup);
+      
+      marker.on('click', (event) => {
+        console.log('Marker ' + location.id + ' clicked!', event);
+        alert('Marker ' + location.id + ' clicked!');
       });
 
-
-      // Create a LayerGroup
-      this.markersGroup = L.layerGroup().addTo(this.map);
-
-      // Add a marker to the map
-      locations.forEach((location) => {
-        var marker = L.marker([Number(location.latitude), Number(location.longitude)], { icon: customIcon }).addTo(this.markersGroup);
-        
-        marker.on('click', (event) => {
-          console.log('Marker ' + location.id + ' clicked!', event);
-          alert('Marker ' + location.id + ' clicked!');
-        });
-
-        // Add a popup to the marker on a mouseover event
-        marker.on('mouseover', (event) => {
-          marker.bindPopup('Marker ' + location.id).openPopup();
-        });
+      // Add a popup to the marker on a mouseover event
+      marker.on('mouseover', (event) => {
+        marker.bindPopup('Marker ' + location.id).openPopup();
       });
     });
   }
 
-  addRoads(): void {
-    this.getRoads().subscribe((mapJson: Road[]) => {
+  private addRoads(roads : Road[]): void {
+    console.log(roads);
 
-      var roads: Road[] = mapJson;
-      console.log(roads);
-
-      // Add a marker to the map
-      roads.forEach((road: Road) => {
-        var origin: Intersection = road.origin;
-        var destination: Intersection = road.destination;
-        // Draw a line between the two points
-        var line = L.polyline([[Number(origin.latitude), Number(origin.longitude)], [Number(destination.latitude), Number(destination.longitude)]], { color: 'blue' }).addTo(this.markersGroup);
-       
-      });
+    // Add a marker to the map
+    roads.forEach((road: Road) => {
+      var origin: Intersection = road.origin;
+      var destination: Intersection = road.destination;
+      // Draw a line between the two points
+      var line = L.polyline([[origin.latitude, origin.longitude], [destination.latitude, destination.longitude]], { color: 'blue' }).addTo(this.markersGroup);
     });
   }
 }
