@@ -53,7 +53,7 @@ export class MapComponent {
       this.removeMarkers();
     }
     
-    this.addIntersections(data.intersections, "marker.svg"); 
+    this.addIntersections(data.intersections, "circle-blue.svg"); 
     this.addRoads(data.roads);
     this.mapReset = false;
   }
