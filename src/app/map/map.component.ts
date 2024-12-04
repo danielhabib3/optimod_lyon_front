@@ -58,7 +58,7 @@ export class MapComponent {
     }
     
     this.addIntersections(data.intersections, "circle-blue.svg"); 
-    this.addRoads(data.roads);
+    this.addRoads(data.roads, 'blue');
     this.mapReset = false;
   }
 
@@ -118,7 +118,7 @@ export class MapComponent {
     });
   }
 
-  private addRoads(roads : Road[]): void {
+  private addRoads(roads : Road[], colorRoad: string): void {
     console.log(roads);
 
     // Add a marker to the map
@@ -126,7 +126,7 @@ export class MapComponent {
       var origin: Intersection = road.origin;
       var destination: Intersection = road.destination;
       // Draw a line between the two points
-      var line = L.polyline([[origin.latitude, origin.longitude], [destination.latitude, destination.longitude]], { color: 'blue' }).addTo(this.markersGroup);
+      var line = L.polyline([[origin.latitude, origin.longitude], [destination.latitude, destination.longitude]], { color: colorRoad }).addTo(this.markersGroup);
     });
   }
 }
