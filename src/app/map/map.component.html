@@ -14,18 +14,52 @@
 
         <!-- Manage Couriers Section -->
         <div style="margin-bottom: 20px;">
-            <h3>Manage Couriers</h3>
             <label for="courierCount" style="display: block; margin-bottom: 5px;">Number of Couriers:</label>
-            <input type="number" id="courierCount" name="courierCount" min="1" style="display: block; width: 100%;" />
+            <input type="number" id="courierCount" name="courierCount" min="1" max="10" style="display: block; width: 100%;" />
+            <button (click)="confirmCourierCount()" style="display: block; width: 100%; margin-top: 10px;">Confirm</button>
         </div>
+
+        <!-- Select Courier Names Section -->
+        <div style="margin-bottom: 20px;">
+            <h3>Select Couriers</h3>
+            <select id="courierNames" name="courierNames" style="display: block; width: 100%;">
+                <option value="" disabled selected>None</option>
+                <option *ngFor="let courier of allCouriers" [value]="courier.id">{{ courier.name }}</option>
+            </select>
+        </div>
+        
+        <button (click)="addCourier()" style="display: block; width: 100%; margin-top: 10px;">Add Courier</button>
+
+        <!-- Couriers Table Section -->
+        <div style="margin-bottom: 20px;">
+            <h3>Couriers List</h3>
+            <table style="width: 100%; border-collapse: collapse;">
+                <thead>
+                    <tr>
+                        <th style="border: 1px solid #ddd; padding: 8px;">Courier ID</th>
+                        <th style="border: 1px solid #ddd; padding: 8px;">Courier Name</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let courier of selectedCouriers">
+                        <td style="border: 1px solid #ddd; padding: 8px;">{{ courier.id }}</td>
+                        <td style="border: 1px solid #ddd; padding: 8px;">{{ courier.name }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        
 
         <!-- Delivery Requests Section -->
         <div style="margin-bottom: 20px;">
             <h3>Delivery Requests</h3>
             <label for="courierSelect" style="display: block; margin-bottom: 5px;">Select Courier:</label>
+            <!--
             <select id="courierSelect" name="courierSelect" style="display: block; width: 100%; margin-bottom: 10px;">
                 <option *ngFor="let courier of couriers" [value]="courier.id">{{ courier.name }}</option>
             </select>
+            -->
             <label for="pickupLocation" style="display: block; margin-bottom: 5px;">Pickup Location:</label>
             <input id="pickupLocation" name="pickupLocation" placeholder="Enter address"
                 style="display: block; width: 100%; margin-bottom: 10px;" />

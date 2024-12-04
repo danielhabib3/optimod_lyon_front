@@ -7,12 +7,13 @@ import { Road } from '../road';
 import { Observable } from 'rxjs';
 import { Courier } from '../courier'; // Import Courier interface
 import { Map } from '../map';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-map',
   templateUrl: './map.component.html',
   styleUrls: ['./map.component.css'],
-  imports: [FormsModule, HttpClientModule]
+  imports: [FormsModule, HttpClientModule, CommonModule]
 })
 export class MapComponent {
   private map!: L.Map;
@@ -23,6 +24,8 @@ export class MapComponent {
   mapOpened: boolean = false;
   mapReset: boolean = true;
   allCouriers: Courier[] = [];
+  selectedCouriers: Courier[] = [];
+  numberOfCouriers: number = 0;
 
   constructor(private http: HttpClient) { }
 
@@ -101,13 +104,36 @@ export class MapComponent {
       return;
       }
       this.allCouriers = couriers;
-      couriers.forEach(courier => {
+      this.allCouriers.forEach(courier => {
       console.log(`Courier ID: ${courier.id}, Name: ${courier.name}`);
       });
     }, error => {
       console.error('Error loading couriers', error);
       alert('Error loading couriers');
     });
+  }
+
+  addCourier() {
+    const courierSelect = document.getElementById('courierSelect') as HTMLSelectElement;
+    const selectedCourierId = parseInt(courierSelect.value, 10);
+    const selectedCourier = this.allCouriers.find(courier => courier.id === selectedCourierId);
+    if (!selectedCourier) {
+      alert('Please select a courier');
+      return;
+    }
+    this.selectedCouriers.push(selectedCourier);
+  }
+
+  confirmCourierCount() {
+    const courierCountInput = document.getElementById('courierCount') as HTMLInputElement;
+    const count2 = parseInt(courierCountInput.value, 10);
+
+    if (isNaN(count2) || count2 < 1 || count2 > 10) {
+      alert('Please enter a valid number of couriers between 1 and 10.');
+      return;
+    }
+
+    this.numberOfCouriers = count2;
   }
 
   private resetMap() : void {
