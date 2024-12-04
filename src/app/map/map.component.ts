@@ -5,6 +5,7 @@ import { HttpClientModule, HttpClient } from '@angular/common/http';
 import { Intersection } from '../intersection';
 import { Road } from '../road';
 import { Observable } from 'rxjs';
+import { Courier } from '../courier'; // Import Courier interface
 import { Map } from '../map';
 
 @Component({
@@ -15,23 +16,25 @@ import { Map } from '../map';
 })
 export class MapComponent {
   private map!: L.Map;
-  private baseLink = 'http://localhost:8080/api/map/'; // the link to the map API
+  private baseLink = 'http://localhost:8080/api/'; // the link to the map API
   private markersGroup!: L.LayerGroup;
-  mapFile: File | null = null; // xml file of the map 
+  xmlFile: File | null = null; // xml file of the map 
   allowedMapsToDisplay = ['petitPlan.json', 'moyenPlan.json', 'grandPlan.json'];
   mapOpened: boolean = false;
   mapReset: boolean = true;
+  allCouriers: Courier[] = [];
 
   constructor(private http: HttpClient) { }
 
   // function that gets the xml from the front, and sends it to the backend to parse
-  sendXMLtoBack() {
-    this.mapFile = (document.getElementById('mapFile') as HTMLInputElement).files![0];
+  // typeToSend is delivery or map
+  sendXMLtoBack(typeToSend: string) {
+    this.xmlFile = (document.getElementById(`${typeToSend}File`) as HTMLInputElement).files![0];
     // check if the file is an xml file
-    if (this.mapFile && this.mapFile.type === 'text/xml') { 
+    if (this.xmlFile && this.xmlFile.type === 'text/xml') { 
       const formData = new FormData();
-      formData.append('file', this.mapFile);
-      this.http.post<Map>(`${this.baseLink}parse`, formData).subscribe((data) => {
+      formData.append('file', this.xmlFile);
+      this.http.post<Map>(`${this.baseLink}${typeToSend}/parse`, formData).subscribe((data) => {
         console.log("data "+ data); // TODO remove
         if(!data) {
           alert('Error while parsing the XML file');
@@ -41,7 +44,17 @@ export class MapComponent {
           alert('No data found in the XML file or the XML file is not well formatted as a map, no roads or intersections found');
           return;
         }
-        this.loadMap(data);
+        switch(typeToSend) {
+          case 'map':
+            this.loadMap(data);
+            break;
+          case 'delivery':
+            this.loadDelivery(data);
+            break;
+          default:
+            alert('Error while parsing the XML file');
+            break;
+        }
       });    
     } else {
       alert('Please select an XML file');
@@ -60,6 +73,41 @@ export class MapComponent {
     this.addIntersections(data.intersections, "circle-blue.svg"); 
     this.addRoads(data.roads, 'blue');
     this.mapReset = false;
+  }
+
+
+  // NOT FINSIHED, DEPENDING ON THE RESPONSE OF THE BACKEND
+  private loadDelivery(data : Map) {
+    if(!this.mapOpened) {
+      this.mapOpened = true;
+      this.initMap();
+    }
+    if(this.mapOpened && !this.mapReset) {
+      this.removeMarkers();
+    }
+    
+    this.addIntersections(data.intersections, "circle-red.svg"); 
+    this.addRoads(data.roads, 'red');
+    this.mapReset = false;
+  }
+
+
+
+  loadCouriers() {
+    this.http.get<Courier[]>(`${this.baseLink}couriers`).subscribe((couriers) => {
+      console.log(couriers);
+      if (couriers.length === 0) {
+      alert('No couriers found');
+      return;
+      }
+      this.allCouriers = couriers;
+      couriers.forEach(courier => {
+      console.log(`Courier ID: ${courier.id}, Name: ${courier.name}`);
+      });
+    }, error => {
+      console.error('Error loading couriers', error);
+      alert('Error loading couriers');
+    });
   }
 
   private resetMap() : void {
@@ -128,5 +176,10 @@ export class MapComponent {
       // Draw a line between the two points
       var line = L.polyline([[origin.latitude, origin.longitude], [destination.latitude, destination.longitude]], { color: colorRoad }).addTo(this.markersGroup);
     });
+  }
+
+
+  ngOnInit() {
+    this.loadCouriers();
   }
 }

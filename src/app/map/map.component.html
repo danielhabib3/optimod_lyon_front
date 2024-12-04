@@ -6,8 +6,10 @@
         <!-- Load Map Section -->
         <div style="margin-bottom: 20px;">
             <h3>Load Map</h3>
-            <label for="mapFile" style="display: block; margin-bottom: 5px;">Select XML File:</label>
-            <input type="file" id="mapFile" name="mapFile" (change)="sendXMLtoBack()" style="display: block; width: 100%;" />
+            <input type="file" id="mapFile" name="mapFile" (change)="sendXMLtoBack('map')" style="display: block; width: 100%;" />
+            
+            <h3>Load Delivery Requests</h3>
+            <input type="file" id="deliveryFile" name="deliveryFile" (change)="sendXMLtoBack('delivery')" style="display: block; width: 100%;" />
         </div>
 
         <!-- Manage Couriers Section -->
