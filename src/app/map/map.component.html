@@ -1,4 +1,4 @@
-<div class="flex font-mono h-screen">
+<div class="flex font-mono h-screen text-white">
     <!-- Sidebar -->
     <div class="bg-primary-light w-1/4 px-6">
         <h2 class="text-center m-5 ">Delivery Tour Optimizer</h2>
@@ -6,45 +6,63 @@
 
         <!-- Load Map Section -->
         <div>
-            <h3>Load Map</h3>
-            <input type="file" class="file-input file-input-bordered w-full max-w-s" (change)="chooseMap()" />
+            <button (click)="toggleDropMenu(1)">
+                <h3>Load Map</h3>
+            </button>
+            <div *ngIf="toggleLoading" class="p-4 bg-gray-100 border rounded">
+                <input type="file" class="file-input file-input-bordered w-full max-w-s" (change)="chooseMap()" />
+            </div>
         </div>
 
         <!-- Manage Couriers Section -->
         <div>
-            <h3>Manage Couriers</h3>
-            <label for="courierCount">Number of Couriers</label>
-            <input type="number" min="1" id="courierCount" name="courierCount" placeholder="1"
-                class="input input-bordered w-full max-w-s" />
+            <button (click)="toggleDropMenu(2)">
+                <h3>Manage Couriers</h3>
+            </button>
+
+            <div *ngIf="toggleCourrier" class="p-4 bg-gray-100 border rounded">
+                <label for="courierCount">Number of Couriers</label>
+                <input type="number" min="1" id="courierCount" name="courierCount" placeholder="1"
+                    class="input input-bordered w-full max-w-s" />
+            </div>
         </div>
 
         <!-- Delivery Requests Section -->
         <div>
-            <div>
+            <button (click)="toggleDropMenu(3)">
                 <h3>Delivery Requests</h3>
-                <label for="courierSelect">Select Courier</label>
-                <select id="courierSelect" name="courierSelect" class="select select-bordered w-full max-w-s">
-                    <option *ngFor="let courier of couriers" [value]="courier.id">{{ courier.name }}</option>
-                </select>
-            </div>
-            <div>
-                <label for="pickupLocation">Pickup Location</label>
-                <input type="text" id="pickupLocation" name="pickupLocation" placeholder="Enter address"
-                    class="input input-bordered w-full max-w-s" />
-            </div>
-            <div>
-                <label for="deliveryLocation">Delivery Location</label>
-                <input type="text" id="deliveryLocation" name="deliveryLocation" placeholder="Enter address"
-                    class="input input-bordered w-full max-w-s" />
-                <button class="btn mt-3 block max-w-s w-full">Add delivery request</button>
+            </button>
+
+            <div *ngIf="toggleDelivery" class="p-4 bg-gray-100 border rounded">
+                <div>
+                    <label for="courierSelect">Select Courier</label>
+                    <select id="courierSelect" name="courierSelect" class="select select-bordered w-full max-w-s">
+                        <!-- <option *ngFor="let courier of couriers" [value]="courier.id">{{ courier.name }}</option> -->
+                    </select>
+                </div>
+                <div>
+                    <label for="pickupLocation">Pickup Location</label>
+                    <input type="text" id="pickupLocation" name="pickupLocation" placeholder="Enter address"
+                        class="input input-bordered w-full max-w-s" />
+                </div>
+                <div>
+                    <label for="deliveryLocation">Delivery Location</label>
+                    <input type="text" id="deliveryLocation" name="deliveryLocation" placeholder="Enter address"
+                        class="input input-bordered w-full max-w-s" />
+                    <button class="btn mt-3 block max-w-s w-full">Add delivery request</button>
+                </div>
             </div>
         </div>
 
         <!-- Save/Restore Tours Section -->
         <div>
-            <h3>Save/Restore Tours</h3>
-            <button class="btn mt-3 w-full max-w-s">Save tours</button>
-            <button class="btn mt-3 w-full max-w-s">Restore tours</button>
+            <button (click)="toggleDropMenu(4)">
+                <h3>Save/Restore Tours</h3>
+            </button>
+            <div *ngIf="toggleTours" class="p-4 bg-gray-100 border rounded">
+                <button class="btn mt-3 w-full max-w-s">Save tours</button>
+                <button class="btn mt-3 w-full max-w-s">Restore tours</button>
+            </div>
         </div>
     </div>
 

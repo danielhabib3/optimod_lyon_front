@@ -5,12 +5,13 @@ import { HttpClientModule, HttpClient } from '@angular/common/http';
 import { Intersection } from '../intersection';
 import { Road } from '../road';
 import { Observable } from 'rxjs';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-map',
   templateUrl: './map.component.html',
   styleUrls: ['./map.component.css'],
-  imports: [FormsModule, HttpClientModule]
+  imports: [FormsModule, HttpClientModule, CommonModule]
 })
 export class MapComponent {
   private map!: L.Map;
@@ -18,6 +19,12 @@ export class MapComponent {
   private markersGroup!: L.LayerGroup;
   mapName: string = ''; // Bound to the input field
   allowedMapsToDisplay = ['petitPlan.json', 'moyenPlan.json', 'grandPlan.json'];
+
+  // variables used for drop down menus
+  toggleLoading = false;
+  toggleCourrier = false;
+  toggleDelivery = false;
+  toggleTours = false;
 
   constructor(private http: HttpClient) { }
 
@@ -29,6 +36,20 @@ export class MapComponent {
     // });
     return this.http.get<Intersection[]>(url);
   }
+  
+  // function that changes the value of the toggled zone
+  toggleDropMenu(toggleZoneNumber : number) : void {
+    if(toggleZoneNumber == 1) {
+      this.toggleLoading = !this.toggleLoading;
+    } else if(toggleZoneNumber == 2) {
+      this.toggleCourrier = !this.toggleCourrier;
+    } else if(toggleZoneNumber == 3) {
+      this.toggleDelivery = !this.toggleDelivery;
+    } else if(toggleZoneNumber == 4) {
+      this.toggleTours = !this.toggleTours;
+    }
+  }
+
 
   getRoads() : Observable<Road[]> {
     const url = `${this.baseLink}roads`;
