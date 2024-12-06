@@ -25,7 +25,7 @@ export class MapComponent {
   mapReset: boolean = true;
   allCouriers: Courier[] = [];
   selectedCouriers: Courier[] = [];
-  numberOfCouriers: number = 0;
+  numberOfCouriers: number = 1;
 
   constructor(private http: HttpClient) { }
 
@@ -114,11 +114,20 @@ export class MapComponent {
   }
 
   addCourier() {
-    const courierSelect = document.getElementById('courierSelect') as HTMLSelectElement;
-    const selectedCourierId = parseInt(courierSelect.value, 10);
-    const selectedCourier = this.allCouriers.find(courier => courier.id === selectedCourierId);
+    if (this.selectedCouriers.length == this.numberOfCouriers) {
+      alert(`You can only add up to ${this.numberOfCouriers} couriers.`);
+      return;
+    }
+
+    const courierNames = document.getElementById('courierNames') as HTMLSelectElement;
+    const selectedCourierId = parseInt(courierNames.value, 10);
+    let selectedCourier: Courier | undefined = this.allCouriers.find(courier => courier.id === selectedCourierId);
     if (!selectedCourier) {
-      alert('Please select a courier');
+      alert('Please select a valid courier');
+      return;
+    }
+    if (this.selectedCouriers.some(courier => courier.id === selectedCourierId)) {
+      alert('Courier is already added');
       return;
     }
     this.selectedCouriers.push(selectedCourier);
@@ -128,10 +137,12 @@ export class MapComponent {
     const courierCountInput = document.getElementById('courierCount') as HTMLInputElement;
     const count2 = parseInt(courierCountInput.value, 10);
 
-    if (isNaN(count2) || count2 < 1 || count2 > 10) {
-      alert('Please enter a valid number of couriers between 1 and 10.');
+    if (isNaN(count2) || count2 < 1 || count2 > this.allCouriers.length) {
+      alert(`Please enter a valid number of couriers between 1 and ${this.allCouriers.length}.`);
       return;
     }
+    
+    this.selectedCouriers = [];
 
     this.numberOfCouriers = count2;
   }
