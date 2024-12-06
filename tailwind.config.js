@@ -7,22 +7,22 @@ module.exports = {
     extend: {
       colors: {
         primary: {
-          DEFAULT: "#2563eb", // Main blue
-          light: "#3b82f6", // Lighter blue for hover states
-          dark: "#1e40af", // Darker blue
+          DEFAULT: 'var(--color-primary)', // Main blue
+          light: 'var(--color-primary-light)', // Lighter blue for hover states
+          dark: 'var(--color-primary-dark)', // Darker blue
         },
         secondary: {
-          DEFAULT: "#10b981", // Green for actions
-          light: "#34d399", // Lighter green
-          dark: "#059669", // Darker green
+          DEFAULT: 'var(--color-secondary)', // Green for actions
+          light: 'var(--color-secondary-light)', // Lighter green
+          dark: 'var(--color-secondary-dark)', // Darker green
         },
         neutral: {
-          light: "#f9fafb", // Backgrounds
-          DEFAULT: "#f3f4f6", // Slightly darker for cards
-          dark: "#374151", // Text and borders
+          DEFAULT: 'var(--color-neutral)', // Slightly darker for cards
+          light: 'var(--color-neutral-light)', // Backgrounds
+          dark: 'var(--color-neutral-dark)', // Text and borders
         },
         danger: {
-          DEFAULT: "#ef4444", // Red for warnings/errors
+          DEFAULT: 'var(--color-error)', // Red for warnings/errors
         },
       },
       fontFamily: {

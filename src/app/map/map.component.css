@@ -15,7 +15,33 @@ label {
   margin-bottom: 10px;
 }
 
-.dropDown {
-  margin-bottom: 10px 0;
-  /* TODO continue here for the css of the drop down menus */
+.drop-down-menu {
+  background-color: var(--color-secondary-dark);
+  padding-left: 5%;
+  padding-top: 5%;
+  padding-bottom: 5%;
+}
+
+.drop-down-button {
+  background-color: var(--color-secondary);
+  color: white;
+  text-align: start;
+  padding-left: 5%;
+  padding-top: 5%;
+  padding-bottom: 5%;
+  width: 100%;
+  cursor: pointer;
+  border-bottom: 1px solid var(--color-secondary-dark);
+  border-top: 1px solid var(--color-secondary-dark);
+  transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.drop-down-button:hover {
+  background-color: var(--color-secondary-dark);
+}
+
+.arrow {
+  float: right;
+  margin-right: 5%;
+  transition: transform 0.3s ease;
 }
