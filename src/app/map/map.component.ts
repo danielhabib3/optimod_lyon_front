@@ -60,6 +60,12 @@ export class MapComponent {
           
           break;
         case 'deliveryRequest':
+
+          if (this.selectedCouriers.length === 0) {
+            alert('Please select at least one courier');
+            return;
+          }
+
           formData.append('couriers', JSON.stringify(this.selectedCouriers));
           this.http.post<Map>(`${this.baseLink}${typeToSend}/parse`, formData).subscribe((data) => {
             console.log("data "+ data);

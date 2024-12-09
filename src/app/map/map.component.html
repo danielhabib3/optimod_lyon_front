@@ -9,12 +9,13 @@
             <input type="file" id="mapFile" name="mapFile" (change)="sendXMLtoBack('map')" style="display: block; width: 100%;" />
             
             <h3>Load Delivery Requests</h3>
-            <input type="file" id="deliveryRequestFile" name="deliveryRequestFile" (change)="sendXMLtoBack('deliveryRequest')" style="display: block; width: 100%;" />
+            <input type="file" id="deliveryRequestFile" name="deliveryRequestFile" style="display: block; width: 100%;" />
+            <button (click)="sendXMLtoBack('deliveryRequest')" style="display: block; width: 100%; margin-top: 10px;">Submit Delivery Requests</button>
         </div>
 
         <!-- Manage Couriers Section -->
         <div style="margin-bottom: 20px;">
-            <label for="courierCount" style="display: block; margin-bottom: 5px;">Number of Couriers:</label>
+            <label for="courierCount" style="display: block; margin-bottom: 5px;">Maximum Number of Couriers:</label>
             <input type="number" id="courierCount" name="courierCount" min="1" value="1" style="display: block; width: 100%;" />
             <button (click)="confirmCourierCount()" style="display: block; width: 100%; margin-top: 10px;">Confirm</button>
         </div>
