@@ -1,48 +1,120 @@
-<div style="display: flex; height: 100vh;">
+<div class="flex font-sans h-screen text-white">
     <!-- Sidebar -->
-    <div style="width: 300px; padding: 20px; background-color: #f8f9fa; box-shadow: 2px 0 5px rgba(0,0,0,0.1);">
-        <h2>Delivery Tour Optimizer</h2>
+    <div class="bg-primary w-1/4 px-6 h-full overflow-y-auto pb-6">
+        <h2 class="text-center m-5 ">Delivery Tour Optimizer</h2>
+        <hr class="my-2 w-11/12 mx-auto text-grey-600 pb-6">
 
-        <!-- Load Map Section -->
-        <div style="margin-bottom: 20px;">
-            <h3>Load Map</h3>
-            <label for="mapFile" style="display: block; margin-bottom: 5px;">Select XML File:</label>
-            <input type="file" id="mapFile" name="mapFile" (change)="sendXMLtoBack()" style="display: block; width: 100%;" />
+        <!-- Load -->
+        <div>
+            <button (click)="toggleDropMenu(1)" class="drop-down-button">
+                <h3 class="inline-block">Load</h3>
+                <span *ngIf="!toggleLoading" class="arrow">⬅</span>
+                <span *ngIf="toggleLoading" class="arrow">⬇</span>
+            </button>
+            <div *ngIf="toggleLoading" class="drop-down-menu">
+                <label>Map File</label>
+                <input type="file" class="file-input file-input-bordered w-5/6 max-w-s" (change)="chooseMap()" />
+
+                <label class="pt-6">Delivery Requests File</label>
+                <input type="file" class="file-input file-input-bordered w-5/6 max-w-s" (change)="chooseRequests()" />
+            </div>
         </div>
 
         <!-- Manage Couriers Section -->
-        <div style="margin-bottom: 20px;">
-            <h3>Manage Couriers</h3>
-            <label for="courierCount" style="display: block; margin-bottom: 5px;">Number of Couriers:</label>
-            <input type="number" id="courierCount" name="courierCount" min="1" style="display: block; width: 100%;" />
+        <div>
+            <button (click)="toggleDropMenu(2)" class="drop-down-button">
+                <h3 class="inline-block">Manage Couriers</h3>
+                <span *ngIf="!toggleCourrier" class="arrow">⬅</span>
+                <span *ngIf="toggleCourrier" class="arrow">⬇</span>
+            </button>
+
+            <div *ngIf="toggleCourrier" class="drop-down-menu">
+                <label for="courierCount">Number of Couriers</label>
+                <input type="number" min="1" id="courierCount" name="courierCount" placeholder="1"
+                    class="input input-bordered w-5/6 max-w-s" />
+                <button (click)="confirmCourierCount()" class="btn mt-3 block max-w-s w-5/6">Confirm</button>
+
+                <label class="pt-6" for="courierSelect">Select Courier</label>
+                <select id="courierSelect" name="courierSelect" class="select select-bordered w-5/6 max-w-s">
+                    <!-- <option *ngFor="let courier of couriers" [value]="courier.id">{{ courier.name }}</option> -->
+                </select>
+                <label class="pt-6" for="courierTable">Couriers List</label>
+
+                <div class="overflow-x-auto">
+                    <table class="table w-5/6 max-w-s">
+                        <!-- head -->
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Name</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- <tr *ngFor="let courier of selectedCouriers">
+                                <td style="border: 1px solid #ddd; padding: 8px;">{{ courier.id }}</td>
+                                <td style="border: 1px solid #ddd; padding: 8px;">{{ courier.name }}</td>
+                            </tr> -->
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
         </div>
 
         <!-- Delivery Requests Section -->
-        <div style="margin-bottom: 20px;">
-            <h3>Delivery Requests</h3>
-            <label for="courierSelect" style="display: block; margin-bottom: 5px;">Select Courier:</label>
-            <select id="courierSelect" name="courierSelect" style="display: block; width: 100%; margin-bottom: 10px;">
-                <option *ngFor="let courier of couriers" [value]="courier.id">{{ courier.name }}</option>
-            </select>
-            <label for="pickupLocation" style="display: block; margin-bottom: 5px;">Pickup Location:</label>
-            <input id="pickupLocation" name="pickupLocation" placeholder="Enter address"
-                style="display: block; width: 100%; margin-bottom: 10px;" />
-            <label for="deliveryLocation" style="display: block; margin-bottom: 5px;">Delivery Location:</label>
-            <input id="deliveryLocation" name="deliveryLocation" placeholder="Enter address"
-                style="display: block; width: 100%; margin-bottom: 10px;" />
-            <button style="display: block; width: 100%;">Add Delivery Request</button>
+        <div>
+            <button (click)="toggleDropMenu(3)" class="drop-down-button">
+                <h3 class="inline-block">Delivery Requests</h3>
+                <span *ngIf="!toggleDelivery" class="arrow">⬅</span>
+                <span *ngIf="toggleDelivery" class="arrow">⬇</span>
+            </button>
+
+            <div *ngIf="toggleDelivery" class="drop-down-menu">
+                <div>
+                    <label for="pickupLocation">Pickup Location</label>
+                    <input type="text" id="pickupLocation" name="pickupLocation" placeholder="Enter address"
+                        class="input input-bordered w-5/6 max-w-s" />
+                </div>
+                <div class="pt-6">
+                    <label for="deliveryLocation">Delivery Location</label>
+                    <input type="text" id="deliveryLocation" name="deliveryLocation" placeholder="Enter address"
+                        class="input input-bordered w-5/6 max-w-s" />
+                    <button class="btn mt-3 block max-w-s w-5/6">Add delivery request</button>
+                    <button class="btn mt-3 block max-w-s w-5/6" (click)="sendXMLtoBack('deliveryRequest')">
+                        Submit delivery request</button>
+                </div>
+            </div>
         </div>
 
         <!-- Save/Restore Tours Section -->
         <div>
-            <h3>Save/Restore Tours</h3>
-            <button style="display: block; width: 100%; margin-bottom: 10px;">Save Tours</button>
-            <button style="display: block; width: 100%;">Restore Tours</button>
+            <button (click)="toggleDropMenu(4)" class="drop-down-button">
+                <h3 class="inline-block">Save/Restore Tours</h3>
+                <span *ngIf="!toggleTours" class="arrow">⬅</span>
+                <span *ngIf="toggleTours" class="arrow">⬇</span>
+            </button>
+            <div *ngIf="toggleTours" class="drop-down-menu">
+                <button class="btn mt-3 w-5/6 max-w-s">Save tours</button>
+                <button class="btn mt-3 w-5/6 max-w-s">Restore tours</button>
+            </div>
         </div>
     </div>
 
-    <!-- Main Content Area -->
-    <div style="flex-grow: 1; position: relative;">
-        <div id="map" style="width: 100%; height: 100%;"></div>
+    <!-- Map -->
+    <div class="bg-primary-light w-3/4" id="map">
+        <!-- Placeholder content -->
+        <div *ngIf="!mapOpened" class="flex justify-center content-center">
+            <p>Click on the "Load Map" button to load a map</p>
+        </div>
+
+        <!-- Loading spinner/logo -->
+        <div *ngIf="isLoading && mapOpened" class="flex flex-col items-center">
+            <p>Loading map...</p>
+        </div>
+
+        <!-- Map content -->
+        <div *ngIf="!isLoading && mapOpened" class="w-full h-full">
+            <div id="mapContent" class="w-full h-full"></div>
+        </div>
     </div>
 </div>

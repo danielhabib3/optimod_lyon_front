@@ -6,12 +6,13 @@ import { Intersection } from '../intersection';
 import { Road } from '../road';
 import { Observable } from 'rxjs';
 import { Map } from '../map';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-map',
   templateUrl: './map.component.html',
   styleUrls: ['./map.component.css'],
-  imports: [FormsModule, HttpClientModule]
+  imports: [FormsModule, HttpClientModule, CommonModule]
 })
 export class MapComponent {
   private map!: L.Map;
@@ -21,6 +22,13 @@ export class MapComponent {
   allowedMapsToDisplay = ['petitPlan.json', 'moyenPlan.json', 'grandPlan.json'];
   mapOpened: boolean = false;
   mapReset: boolean = true;
+  isLoading = false; // State to track loading status
+
+  // variables used for drop down menus
+  toggleLoading = false;
+  toggleCourrier = false;
+  toggleDelivery = false;
+  toggleTours = false;
 
   constructor(private http: HttpClient) { }
 
@@ -47,6 +55,20 @@ export class MapComponent {
       alert('Please select an XML file');
     }
   }
+  
+  // function that changes the value of the toggled zone
+  toggleDropMenu(toggleZoneNumber : number) : void {
+    if(toggleZoneNumber == 1) {
+      this.toggleLoading = !this.toggleLoading;
+    } else if(toggleZoneNumber == 2) {
+      this.toggleCourrier = !this.toggleCourrier;
+    } else if(toggleZoneNumber == 3) {
+      this.toggleDelivery = !this.toggleDelivery;
+    } else if(toggleZoneNumber == 4) {
+      this.toggleTours = !this.toggleTours;
+    }
+  }
+
 
   private loadMap(data : Map) {
     if(!this.mapOpened) {
@@ -56,13 +78,18 @@ export class MapComponent {
     if(this.mapOpened && !this.mapReset) {
       this.removeMarkers();
     }
-    
-    this.addIntersections(data.intersections, "circle-blue.svg"); 
-    this.addRoads(data.roads);
+    this.isLoading = true; // Start loading
+
+    setTimeout(() => {
+      this.addIntersections(data.intersections, 'circle-blue.svg');
+      this.addRoads(data.roads);
+      this.isLoading = false; // Finish loading
+    }, 2000); // Simulate loading time
+
     this.mapReset = false;
   }
 
-  private resetMap() : void {
+  resetMap() : void {
     this.removeMarkers();
     this.mapReset = true;
   }
@@ -76,7 +103,7 @@ export class MapComponent {
 
   private initMap(): void {
     // Initialize the map
-    this.map = L.map('map', {
+    this.map = L.map('mapContent', {
       center: [45.75406, 4.857418], // Lyon coordinates
       zoom: 13
     });
