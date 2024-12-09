@@ -1,6 +1,6 @@
 <div class="flex font-sans h-screen text-white">
     <!-- Sidebar -->
-    <div class="bg-primary w-1/4 px-6 h-full overflow-y-auto pb-6">
+    <div class="bg-primary w-1/3 px-6 pl-6 h-full overflow-y-auto pb-6">
         <h2 class="text-center m-5 ">Delivery Tour Optimizer</h2>
         <hr class="my-2 w-11/12 mx-auto text-grey-600 pb-6">
 
@@ -13,12 +13,12 @@
             </button>
             <div *ngIf="toggleLoading" class="drop-down-menu">
                 <label>Map File</label>
-                <input type="file" id="mapFile" class="file-input file-input-bordered w-5/6 max-w-s" />
-                <button (click)="sendXMLtoBack('map')" class="btn mt-3 block max-w-s w-5/6">Submit Map</button>
+                <input type="file" id="mapFile" class="file-input file-input-bordered w-full text-black" />
+                <button (click)="sendXMLtoBack('map')" class="btn mt-3 block w-full">Submit Map</button>
 
                 <label class="pt-6">Delivery Requests File</label>
-                <input type="file" id="deliveryRequestFile" class="file-input file-input-bordered w-5/6 max-w-s" />
-                <button (click)="sendXMLtoBack('deliveryRequest')" class="btn mt-3 block max-w-s w-5/6">Submit Delivery
+                <input type="file" id="deliveryRequestFile" class="file-input file-input-bordered w-full text-black" />
+                <button (click)="sendXMLtoBack('deliveryRequest')" class="btn mt-3 block w-full">Submit Delivery
                     Requests</button>
             </div>
         </div>
@@ -33,30 +33,32 @@
 
             <div *ngIf="toggleCourrier" class="drop-down-menu">
                 <label for="courierCount">Number of Couriers</label>
-                <input type="number" min="1" id="courierCount" name="courierCount" placeholder="1"
-                    class="input input-bordered w-5/6 max-w-s" />
-                <button (click)="confirmCourierCount()" class="btn mt-3 block max-w-s w-5/6">Confirm</button>
+                <input type="number" min="1" id="courierCount" name="courierCount" value="1"
+                    class="input input-bordered w-full text-black" />
+                <button (click)="confirmCourierCount()" class="btn mt-3 block w-full">Confirm</button>
 
                 <label class="pt-6">Select Courier</label>
-                <select id="courierNames" name="courierNames" class="select select-bordered w-5/6 max-w-s">
+                <select id="courierNames" name="courierNames" class="select select-bordered w-full text-black">
                     <option value="" disabled selected>None</option>
                     <option *ngFor="let courier of allCouriers" [value]="courier.id">{{ courier.name }}</option>
                 </select>
+                <button (click)="addCourier()" class="btn mt-3 block w-full">Add Courier</button>
+
                 <label class="pt-6" for="courierTable">Couriers List</label>
 
                 <div class="overflow-x-auto">
-                    <table class="table w-5/6 max-w-s">
+                    <table class="table w-full">
                         <!-- head -->
                         <thead>
-                            <tr>
+                            <tr class="flex text-neutral">
                                 <th>ID</th>
                                 <th>Name</th>
                             </tr>
                         </thead>
-                        <tbody>
-                            <tr *ngFor="let courier of selectedCouriers">
-                                <td style="border: 1px solid #ddd; padding: 8px;">{{ courier.id }}</td>
-                                <td style="border: 1px solid #ddd; padding: 8px;">{{ courier.name }}</td>
+                        <tbody class="text-neutral-light">
+                            <tr class="flex" *ngFor="let courier of selectedCouriers">
+                                <td>{{ courier.id }}</td>
+                                <td>{{ courier.name }}</td>
                             </tr>
                         </tbody>
                     </table>
@@ -65,36 +67,6 @@
             </div>
         </div>
 
-        <!-- Select Courier Names Section -->
-        <div style="margin-bottom: 20px;">
-            <h3>Select Couriers</h3>
-            <select id="courierNames" name="courierNames" style="display: block; width: 100%;">
-                <option value="" disabled selected>None</option>
-                <option *ngFor="let courier of allCouriers" [value]="courier.id">{{ courier.name }}</option>
-            </select>
-        </div>
-
-        <button (click)="addCourier()" style="display: block; width: 100%; margin-top: 10px;">Add Courier</button>
-
-        <!-- Couriers Table Section -->
-        <div style="margin-bottom: 20px;">
-            <h3>Couriers List</h3>
-            <table style="width: 100%; border-collapse: collapse;">
-                <thead>
-                    <tr>
-                        <th style="border: 1px solid #ddd; padding: 8px;">Courier ID</th>
-                        <th style="border: 1px solid #ddd; padding: 8px;">Courier Name</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr *ngFor="let courier of selectedCouriers">
-                        <td style="border: 1px solid #ddd; padding: 8px;">{{ courier.id }}</td>
-                        <td style="border: 1px solid #ddd; padding: 8px;">{{ courier.name }}</td>
-                    </tr>
-                </tbody>
-            </table>
-
-        </div>
 
         <!-- Delivery Requests Section -->
         <div>
@@ -108,14 +80,14 @@
                 <div>
                     <label for="pickupLocation">Pickup Location</label>
                     <input type="text" id="pickupLocation" name="pickupLocation" placeholder="Enter address"
-                        class="input input-bordered w-5/6 max-w-s" />
+                        class="input input-bordered w-full text-black" />
                 </div>
                 <div class="pt-6">
                     <label for="deliveryLocation">Delivery Location</label>
                     <input type="text" id="deliveryLocation" name="deliveryLocation" placeholder="Enter address"
-                        class="input input-bordered w-5/6 max-w-s" />
-                    <button class="btn mt-3 block max-w-s w-5/6">Add delivery request</button>
-                    <button class="btn mt-3 block max-w-s w-5/6" (click)="sendXMLtoBack('deliveryRequest')">
+                        class="input input-bordered w-full text-black" />
+                    <button class="btn mt-3 block w-full">Add delivery request</button>
+                    <button class="btn mt-3 block w-full" (click)="sendXMLtoBack('deliveryRequest')">
                         Submit delivery request</button>
                 </div>
             </div>
@@ -130,8 +102,8 @@
                 <span *ngIf="toggleTours" class="arrow">⬇</span>
             </button>
             <div *ngIf="toggleTours" class="drop-down-menu">
-                <button class="btn mt-3 w-5/6 max-w-s">Save tours</button>
-                <button class="btn mt-3 w-5/6 max-w-s">Restore tours</button>
+                <button class="btn mt-3 w-full">Save tours</button>
+                <button class="btn mt-3 w-full">Restore tours</button>
             </div>
         </div>
     </div>
