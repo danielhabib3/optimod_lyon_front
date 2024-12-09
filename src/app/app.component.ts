@@ -1,9 +1,11 @@
 import { Component } from '@angular/core';
-import { RouterLink, RouterOutlet } from '@angular/router';
+import { MapComponent } from './map/map.component';
+import { HeaderComponent } from './header/header.component';
+import { FooterComponent } from './footer/footer.component';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, RouterLink], 
+  imports: [MapComponent, HeaderComponent, FooterComponent], 
   templateUrl: './app.component.html',
 })
 export class AppComponent {
