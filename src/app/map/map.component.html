@@ -1,8 +1,8 @@
 <div class="flex font-sans h-screen text-white">
     <!-- Sidebar -->
-    <div class="bg-primary-light w-1/4 px-6">
+    <div class="bg-primary w-1/4 px-6 h-full overflow-y-auto pb-6">
         <h2 class="text-center m-5 ">Delivery Tour Optimizer</h2>
-        <hr class="my-2 w-11/12 mx-auto text-grey-600">
+        <hr class="my-2 w-11/12 mx-auto text-grey-600 pb-6">
 
         <!-- Load Map Section -->
         <div>
@@ -46,12 +46,12 @@
                         <!-- <option *ngFor="let courier of couriers" [value]="courier.id">{{ courier.name }}</option> -->
                     </select>
                 </div>
-                <div>
+                <div class="pt-6">
                     <label for="pickupLocation">Pickup Location</label>
                     <input type="text" id="pickupLocation" name="pickupLocation" placeholder="Enter address"
                         class="input input-bordered w-5/6 max-w-s" />
                 </div>
-                <div>
+                <div class="pt-6">
                     <label for="deliveryLocation">Delivery Location</label>
                     <input type="text" id="deliveryLocation" name="deliveryLocation" placeholder="Enter address"
                         class="input input-bordered w-5/6 max-w-s" />
@@ -75,5 +75,5 @@
     </div>
 
     <!-- Map -->
-    <div class="bg-primary w-3/4" id="map"></div>
+    <div class="bg-primary-light w-3/4" id="map"></div>
 </div>
