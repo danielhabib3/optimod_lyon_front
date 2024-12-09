@@ -211,7 +211,7 @@ export class MapComponent {
 
   private initMap(): void {
     // Initialize the map
-    this.map = L.map('mapContent', {
+    this.map = L.map('map', {
       center: [45.75406, 4.857418], // Lyon coordinates
       zoom: 13
     });

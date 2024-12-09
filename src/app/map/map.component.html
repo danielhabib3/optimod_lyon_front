@@ -13,12 +13,11 @@
             </button>
             <div *ngIf="toggleLoading" class="drop-down-menu">
                 <label>Map File</label>
-                <input type="file" class="file-input file-input-bordered w-5/6 max-w-s"
-                    (click)="sendXMLtoBack('map')" />
+                <input type="file" id="mapFile" class="file-input file-input-bordered w-5/6 max-w-s" />
                 <button (click)="sendXMLtoBack('map')" class="btn mt-3 block max-w-s w-5/6">Submit Map</button>
 
                 <label class="pt-6">Delivery Requests File</label>
-                <input type="file" class="file-input file-input-bordered w-5/6 max-w-s" (change)="chooseRequests()" />
+                <input type="file" id="deliveryRequestFile" class="file-input file-input-bordered w-5/6 max-w-s" />
                 <button (click)="sendXMLtoBack('deliveryRequest')" class="btn mt-3 block max-w-s w-5/6">Submit Delivery
                     Requests</button>
             </div>
@@ -38,9 +37,10 @@
                     class="input input-bordered w-5/6 max-w-s" />
                 <button (click)="confirmCourierCount()" class="btn mt-3 block max-w-s w-5/6">Confirm</button>
 
-                <label class="pt-6" for="courierSelect">Select Courier</label>
-                <select id="courierSelect" name="courierSelect" class="select select-bordered w-5/6 max-w-s">
-                    <option *ngFor="let courier of couriers" [value]="courier.id">{{ courier.name }}</option>
+                <label class="pt-6">Select Courier</label>
+                <select id="courierNames" name="courierNames" class="select select-bordered w-5/6 max-w-s">
+                    <option value="" disabled selected>None</option>
+                    <option *ngFor="let courier of allCouriers" [value]="courier.id">{{ courier.name }}</option>
                 </select>
                 <label class="pt-6" for="courierTable">Couriers List</label>
 
@@ -54,10 +54,10 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <!-- <tr *ngFor="let courier of selectedCouriers">
+                            <tr *ngFor="let courier of selectedCouriers">
                                 <td style="border: 1px solid #ddd; padding: 8px;">{{ courier.id }}</td>
                                 <td style="border: 1px solid #ddd; padding: 8px;">{{ courier.name }}</td>
-                            </tr> -->
+                            </tr>
                         </tbody>
                     </table>
                 </div>
@@ -137,22 +137,21 @@
     </div>
 
     <!-- Map -->
-    <div class="bg-primary-light w-3/4" id="map">
-        <!-- Placeholder content -->
+    <!-- <div class="bg-primary-light w-3/4" id="mapDiv">
         <div *ngIf="!mapOpened" class="flex justify-center content-center">
             <p>Click on the "Load Map" button to load a map</p>
         </div>
 
-        <!-- Loading spinner/logo -->
         <div *ngIf="isLoading && mapOpened" class="flex flex-col items-center">
             <p>Loading map...</p>
         </div>
 
-        <!-- Map content -->
         <div *ngIf="!isLoading && mapOpened" class="w-full h-full">
-            <div id="mapContent" class="w-full h-full"></div>
+            <div id="map" class="w-full h-full"></div>
         </div>
-    </div>
+    </div> -->
+
+    <div id="map" class="w-full h-full"></div>
 </div>
 
 
