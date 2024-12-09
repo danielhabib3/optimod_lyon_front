@@ -6,11 +6,12 @@
         <!-- Load Map Section -->
         <div style="margin-bottom: 20px;">
             <h3>Load Map</h3>
-            <input type="file" id="mapFile" name="mapFile" (change)="sendXMLtoBack('map')" style="display: block; width: 100%;" />
+            <input type="file" id="mapFile" name="mapFile" style="display: block; width: 100%;" />
+            <button (click)="sendXMLtoBack('map')" style="display: block; width: 100%; margin-top: 10px;">Submit Map</button>
+
             
             <h3>Load Delivery Requests</h3>
             <input type="file" id="deliveryRequestFile" name="deliveryRequestFile" style="display: block; width: 100%;" />
-            <button (click)="sendXMLtoBack('deliveryRequest')" style="display: block; width: 100%; margin-top: 10px;">Submit Delivery Requests</button>
         </div>
 
         <!-- Manage Couriers Section -->
@@ -48,6 +49,8 @@
                     </tr>
                 </tbody>
             </table>
+        
+            <button (click)="sendXMLtoBack('deliveryRequest')" style="display: block; width: 100%; margin-top: 10px;">Submit Delivery Requests</button>
         </div>
 
         
