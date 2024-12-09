@@ -4,15 +4,19 @@
         <h2 class="text-center m-5 ">Delivery Tour Optimizer</h2>
         <hr class="my-2 w-11/12 mx-auto text-grey-600 pb-6">
 
-        <!-- Load Map Section -->
+        <!-- Load -->
         <div>
             <button (click)="toggleDropMenu(1)" class="drop-down-button">
-                <h3 class="inline-block">Load Map</h3>
+                <h3 class="inline-block">Load</h3>
                 <span *ngIf="!toggleLoading" class="arrow">⬅</span>
                 <span *ngIf="toggleLoading" class="arrow">⬇</span>
             </button>
             <div *ngIf="toggleLoading" class="drop-down-menu">
+                <label>Map File</label>
                 <input type="file" class="file-input file-input-bordered w-5/6 max-w-s" (change)="chooseMap()" />
+
+                <label class="pt-6">Delivery Requests File</label>
+                <input type="file" class="file-input file-input-bordered w-5/6 max-w-s" (change)="chooseRequests()" />
             </div>
         </div>
 
@@ -28,6 +32,32 @@
                 <label for="courierCount">Number of Couriers</label>
                 <input type="number" min="1" id="courierCount" name="courierCount" placeholder="1"
                     class="input input-bordered w-5/6 max-w-s" />
+                <button (click)="confirmCourierCount()" class="btn mt-3 block max-w-s w-5/6">Confirm</button>
+
+                <label class="pt-6" for="courierSelect">Select Courier</label>
+                <select id="courierSelect" name="courierSelect" class="select select-bordered w-5/6 max-w-s">
+                    <!-- <option *ngFor="let courier of couriers" [value]="courier.id">{{ courier.name }}</option> -->
+                </select>
+                <label class="pt-6" for="courierTable">Couriers List</label>
+
+                <div class="overflow-x-auto">
+                    <table class="table w-5/6 max-w-s">
+                        <!-- head -->
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Name</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- <tr *ngFor="let courier of selectedCouriers">
+                                <td style="border: 1px solid #ddd; padding: 8px;">{{ courier.id }}</td>
+                                <td style="border: 1px solid #ddd; padding: 8px;">{{ courier.name }}</td>
+                            </tr> -->
+                        </tbody>
+                    </table>
+                </div>
+
             </div>
         </div>
 
@@ -41,12 +71,6 @@
 
             <div *ngIf="toggleDelivery" class="drop-down-menu">
                 <div>
-                    <label for="courierSelect">Select Courier</label>
-                    <select id="courierSelect" name="courierSelect" class="select select-bordered w-5/6 max-w-s">
-                        <!-- <option *ngFor="let courier of couriers" [value]="courier.id">{{ courier.name }}</option> -->
-                    </select>
-                </div>
-                <div class="pt-6">
                     <label for="pickupLocation">Pickup Location</label>
                     <input type="text" id="pickupLocation" name="pickupLocation" placeholder="Enter address"
                         class="input input-bordered w-5/6 max-w-s" />
@@ -56,6 +80,8 @@
                     <input type="text" id="deliveryLocation" name="deliveryLocation" placeholder="Enter address"
                         class="input input-bordered w-5/6 max-w-s" />
                     <button class="btn mt-3 block max-w-s w-5/6">Add delivery request</button>
+                    <button class="btn mt-3 block max-w-s w-5/6" (click)="sendXMLtoBack('deliveryRequest')">
+                        Submit delivery request</button>
                 </div>
             </div>
         </div>
@@ -83,7 +109,6 @@
 
         <!-- Loading spinner/logo -->
         <div *ngIf="isLoading && mapOpened" class="flex flex-col items-center">
-
             <p>Loading map...</p>
         </div>
 
