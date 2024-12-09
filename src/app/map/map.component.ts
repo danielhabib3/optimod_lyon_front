@@ -37,28 +37,51 @@ export class MapComponent {
     if (this.xmlFile && this.xmlFile.type === 'text/xml') { 
       const formData = new FormData();
       formData.append('file', this.xmlFile);
-      this.http.post<Map>(`${this.baseLink}${typeToSend}/parse`, formData).subscribe((data) => {
-        console.log("data "+ data); // TODO remove
-        if(!data) {
-          alert('Error while parsing the XML file');
-          return;
-        }
-        if (data.intersections.length === 0 && data.roads.length === 0) {
-          alert('No data found in the XML file or the XML file is not well formatted as a map, no roads or intersections found');
-          return;
-        }
-        switch(typeToSend) {
-          case 'map':
-            this.loadMap(data);
-            break;
-          case 'delivery':
-            this.loadDelivery(data);
-            break;
-          default:
+
+    
+      switch(typeToSend) {
+        case 'map':
+
+        this.http.post<Map>(`${this.baseLink}${typeToSend}/parse`, formData).subscribe((data) => {
+          console.log("data "+ data);
+          if(!data) {
             alert('Error while parsing the XML file');
-            break;
-        }
-      });    
+            return;
+          }
+          if (data.intersections.length === 0 && data.roads.length === 0) {
+            alert('No data found in the XML file or the XML file is not well formatted as a map, no roads or intersections found');
+            return;
+          }
+          this.loadMap(data);
+        });
+
+
+
+          
+          break;
+        case 'deliveryRequest':
+          formData.append('couriers', JSON.stringify(this.selectedCouriers));
+          this.http.post<Map>(`${this.baseLink}${typeToSend}/parse`, formData).subscribe((data) => {
+            console.log("data "+ data);
+            if(!data) {
+              alert('Error while parsing the XML file');
+              return;
+            }
+            if (data.intersections.length === 0 && data.roads.length === 0) {
+              alert('No data found in the XML file or the XML file is not well formatted as a map, no roads or intersections found');
+              return;
+            }
+            this.loadDelivery(data);
+          });
+
+
+          
+          break;
+        default:
+          alert('Error while parsing the XML file');
+          break;
+      }
+    
     } else {
       alert('Please select an XML file');
     }
@@ -89,7 +112,7 @@ export class MapComponent {
       this.removeMarkers();
     }
     
-    this.addIntersections(data.intersections, "circle-red.svg"); 
+    this.addIntersections(data.intersections, "circle-red.svg", [12, 12]); 
     this.addRoads(data.roads, 'red');
     this.mapReset = false;
   }
@@ -174,14 +197,14 @@ export class MapComponent {
     }).addTo(this.map);
   }
 
-  private addIntersections(locations : Intersection[], iconPath : string): void { 
-
-    console.log(locations);
-
-    var customIcon = L.icon({
-      iconUrl: iconPath,
-      iconSize: [6, 6] // Adjust size as needed
-    });
+  private addIntersections(locations : Intersection[], iconPath : string, iconSize: [number, number] = [6, 6]): void { 
+  
+      console.log(locations);
+  
+      var customIcon = L.icon({
+        iconUrl: iconPath,
+        iconSize: iconSize // Adjust size as needed
+      });
 
 
     // Create a LayerGroup
