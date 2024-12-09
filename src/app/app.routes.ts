@@ -4,8 +4,7 @@ import { MapComponent } from './map/map.component';
 
 export const routes: Routes = [
     {
-        path: 'map',
-        title: 'Map Page',
-        component: MapComponent,
-    },
+        path : '',
+        component : MapComponent, 
+    }
 ];

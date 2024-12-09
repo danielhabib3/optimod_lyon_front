@@ -75,5 +75,21 @@
     </div>
 
     <!-- Map -->
-    <div class="bg-primary-light w-3/4" id="map"></div>
+    <div class="bg-primary-light w-3/4" id="map">
+        <!-- Placeholder content -->
+        <div *ngIf="!mapOpened" class="flex justify-center content-center">
+            <p>Click on the "Load Map" button to load a map</p>
+        </div>
+
+        <!-- Loading spinner/logo -->
+        <div *ngIf="isLoading && mapOpened" class="flex flex-col items-center">
+
+            <p>Loading map...</p>
+        </div>
+
+        <!-- Map content -->
+        <div *ngIf="!isLoading && mapOpened" class="w-full h-full">
+            <div id="mapContent" class="w-full h-full"></div>
+        </div>
+    </div>
 </div>

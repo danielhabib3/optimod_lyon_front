@@ -20,6 +20,11 @@ export class MapComponent {
   mapName: string = ''; // Bound to the input field
   allowedMapsToDisplay = ['petitPlan.json', 'moyenPlan.json', 'grandPlan.json'];
 
+  // variables for defer blocks
+  mapOpened = false;
+  mapReset = true;
+  isLoading = false; // State to track loading status
+
   // variables used for drop down menus
   toggleLoading = false;
   toggleCourrier = false;
@@ -63,7 +68,6 @@ export class MapComponent {
     return this.allowedMapsToDisplay.includes(this.mapName);
   }
 
-  mapOpened = false;
   chooseMap() {
     if(!this.mapOpened) {
       this.mapOpened = true;
@@ -72,13 +76,16 @@ export class MapComponent {
     if(this.mapOpened && !this.mapReset) {
       this.removeMarkers();
     }
-    
-    this.addIntersections();
-    this.addRoads();
+    this.isLoading = true; // Start loading
+
+    setTimeout(() => {
+      this.addIntersections();
+      this.addRoads();
+      this.isLoading = false; // Finish loading
+    }, 2000); // Simulate loading time
+
     this.mapReset = false;
   }
-
-  mapReset: boolean = true;
 
   resetMap() : void {
     this.removeMarkers();
@@ -94,7 +101,7 @@ export class MapComponent {
 
   private initMap(): void {
     // Initialize the map
-    this.map = L.map('map', {
+    this.map = L.map('mapContent', {
       center: [45.75406, 4.857418], // Lyon coordinates
       zoom: 13
     });
