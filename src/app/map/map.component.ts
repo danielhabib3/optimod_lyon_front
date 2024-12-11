@@ -81,7 +81,7 @@ export class MapComponent {
 
           formData.append('couriers', JSON.stringify(this.selectedCouriers));
           formData.append('deliveriesAdded', JSON.stringify(this.deliveriesToAdd));
-          this.http.post<Map>(`${this.baseLink}${typeToSend}/parse`, formData).subscribe((data) => {
+          this.http.post<Map>(`${this.baseLink}${typeToSend}/parseAndGetBestRoute`, formData).subscribe((data) => {
             console.log("data "+ data);
             if(!data) {
               alert('Error while parsing the XML file');
@@ -94,6 +94,14 @@ export class MapComponent {
             this.loadDelivery(data);
           });
 
+          // this.http.get<>(`${this.baseLink}${typeToSend}/getDeliveryRequest`).subscribe((data) => {
+          //   console.log("data "+ data);
+          //   if(!data) {
+          //     alert('Error while getting the delivery request');
+          //     return;
+          //   }
+
+          // });
 
           
           break;
@@ -126,7 +134,7 @@ export class MapComponent {
       this.removeMarkers();
     }
     
-    this.addIntersections(data.intersections, "circle-blue.svg", [6, 6], true); 
+    this.addIntersections(data.intersections, "circle-blue.svg", [12, 12], true); 
     this.addRoads(data.roads, 'blue');
     this.mapReset = false;
   }
