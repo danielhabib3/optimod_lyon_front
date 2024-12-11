@@ -26,6 +26,11 @@ export class MapComponent {
   allCouriers: Courier[] = [];
   selectedCouriers: Courier[] = [];
   numberOfCouriers: number = 1;
+  pickupIntersection: Intersection | null = null;
+  deliveryIntersection: Intersection | null = null;
+  IntersectionsToAdd: Intersection[] = [];
+
+
   isLoading = false; // State to track loading status
 
   // variables used for drop down menus
@@ -74,6 +79,7 @@ export class MapComponent {
           }
 
           formData.append('couriers', JSON.stringify(this.selectedCouriers));
+          formData.append('intersectionsAdded', JSON.stringify(this.IntersectionsToAdd));
           this.http.post<Map>(`${this.baseLink}${typeToSend}/parse`, formData).subscribe((data) => {
             console.log("data "+ data);
             if(!data) {
@@ -222,7 +228,7 @@ export class MapComponent {
     this.mapOpened = true;
   }
 
-  private addIntersections(locations : Intersection[], iconPath : string, iconSize: [number, number] = [6, 6]): void { 
+  private addIntersections(locations : Intersection[], iconPath : string, iconSize: [number, number] = [6, 6], ifMap: boolean): void { 
   
       console.log(locations);
   
