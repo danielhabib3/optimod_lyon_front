@@ -115,10 +115,6 @@ export class MapComponent {
 
 
   private loadMap(data : Map) {
-    if(!this.mapOpened) {
-      this.mapOpened = true;
-      this.initMap();
-    }
     if(this.mapOpened && !this.mapReset) {
       this.removeMarkers();
     }
@@ -131,10 +127,6 @@ export class MapComponent {
 
   // NOT FINSIHED, DEPENDING ON THE RESPONSE OF THE BACKEND
   private loadDelivery(data : Map) {
-    if(!this.mapOpened) {
-      this.mapOpened = true;
-      this.initMap();
-    }
     if(this.mapOpened && !this.mapReset) {
       this.removeMarkers();
     }
@@ -211,6 +203,11 @@ export class MapComponent {
 
   private initMap(): void {
     // Initialize the map
+
+    if(this.mapOpened) {
+      return;
+    }
+
     this.map = L.map('map', {
       center: [45.75406, 4.857418], // Lyon coordinates
       zoom: 13
@@ -222,6 +219,7 @@ export class MapComponent {
       maxZoom: 20,
       attribution: '&copy; <a href="https://www.stadiamaps.com/" target="_blank">Stadia Maps</a> &copy; <a href="https://openmaptiles.org/" target="_blank">OpenMapTiles</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
     }).addTo(this.map);
+    this.mapOpened = true;
   }
 
   private addIntersections(locations : Intersection[], iconPath : string, iconSize: [number, number] = [6, 6]): void { 
@@ -268,5 +266,6 @@ export class MapComponent {
 
   ngOnInit() {
     this.loadCouriers();
+    this.initMap();
   }
 }

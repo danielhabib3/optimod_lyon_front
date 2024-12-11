@@ -18,8 +18,7 @@
 
                 <label class="pt-6">Delivery Requests File</label>
                 <input type="file" id="deliveryRequestFile" class="file-input file-input-bordered w-full text-black" />
-                <button (click)="sendXMLtoBack('deliveryRequest')" class="btn mt-3 block w-full">Submit Delivery
-                    Requests</button>
+                <label class="italic">Please fill the courrier section to submit</label>
             </div>
         </div>
 
@@ -63,7 +62,8 @@
                         </tbody>
                     </table>
                 </div>
-
+                <button (click)="sendXMLtoBack('deliveryRequest')" class="btn mt-3 block w-full">Submit Delivery
+                    Requests</button>
             </div>
         </div>
 
