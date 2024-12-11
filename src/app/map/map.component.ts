@@ -8,6 +8,7 @@ import { Observable } from 'rxjs';
 import { Courier } from '../courier'; // Import Courier interface
 import { Map } from '../map';
 import { CommonModule } from '@angular/common';
+import { Delivery } from '../delivery';
 
 @Component({
   selector: 'app-map',
@@ -28,7 +29,7 @@ export class MapComponent {
   numberOfCouriers: number = 1;
   pickupIntersection: Intersection | null = null;
   deliveryIntersection: Intersection | null = null;
-  IntersectionsToAdd: Intersection[] = [];
+  deliveriesToAdd: Delivery[] = [];
 
 
   isLoading = false; // State to track loading status
@@ -79,7 +80,7 @@ export class MapComponent {
           }
 
           formData.append('couriers', JSON.stringify(this.selectedCouriers));
-          formData.append('intersectionsAdded', JSON.stringify(this.IntersectionsToAdd));
+          formData.append('deliveriesAdded', JSON.stringify(this.deliveriesToAdd));
           this.http.post<Map>(`${this.baseLink}${typeToSend}/parse`, formData).subscribe((data) => {
             console.log("data "+ data);
             if(!data) {
@@ -125,7 +126,7 @@ export class MapComponent {
       this.removeMarkers();
     }
     
-    this.addIntersections(data.intersections, "circle-blue.svg"); 
+    this.addIntersections(data.intersections, "circle-blue.svg", [6, 6], true); 
     this.addRoads(data.roads, 'blue');
     this.mapReset = false;
   }
@@ -137,7 +138,7 @@ export class MapComponent {
       this.removeMarkers();
     }
     
-    this.addIntersections(data.intersections, "circle-red.svg", [12, 12]); 
+    this.addIntersections(data.intersections, "circle-red.svg", [12, 12], false); 
     this.addRoads(data.roads, 'red');
     this.mapReset = false;
   }
@@ -245,16 +246,70 @@ export class MapComponent {
     locations.forEach((location) => {
       var marker = L.marker([Number(location.latitude), Number(location.longitude)], { icon: customIcon }).addTo(this.markersGroup);
       
-      marker.on('click', (event) => {
-        console.log('Marker ' + location.id + ' clicked!', event);
-        alert('Marker ' + location.id + ' clicked!');
-      });
+      if (ifMap) {     
+        marker.on('click', (event) => {
+          console.log('Marker ' + location.id + ' clicked!', event);
+          if (this.pickupIntersection === null) {
+            this.pickupIntersection = location;
+
+            const pickupLocationInput = document.getElementById('pickupLocation') as HTMLInputElement;
+            if (pickupLocationInput) {
+              pickupLocationInput.value = `${location.latitude}, ${location.longitude}`;
+            }
+
+          } else if (this.deliveryIntersection === null) {
+            this.deliveryIntersection = location;
+
+            const deliveryLocationInput = document.getElementById('deliveryLocation') as HTMLInputElement;
+            if (deliveryLocationInput) {
+              deliveryLocationInput.value = `${location.latitude}, ${location.longitude}`;
+            }
+
+          } else {
+            alert('Both pickup and delivery intersections are already selected');
+            return;
+          }
+        });
+      }
 
       // Add a popup to the marker on a mouseover event
       marker.on('mouseover', (event) => {
         marker.bindPopup('Marker ' + location.id).openPopup();
       });
     });
+  }
+
+  clearSelection() {
+    this.pickupIntersection = null;
+    this.deliveryIntersection = null;
+    const pickupLocationInput = document.getElementById('pickupLocation') as HTMLInputElement;
+    if (pickupLocationInput) {
+      pickupLocationInput.value = 'Pick address';
+    }
+    const deliveryLocationInput = document.getElementById('deliveryLocation') as HTMLInputElement;
+    if (deliveryLocationInput) {
+      deliveryLocationInput.value = 'Pick address';
+    }
+  }
+
+  addDelivery() {
+    if (this.pickupIntersection === null || this.deliveryIntersection === null) {
+      alert('Please select both pickup and delivery intersections');
+      return;
+    }
+
+    this.deliveriesToAdd.push({
+      id: this.deliveriesToAdd.length,
+      pickupIntersection: this.pickupIntersection,
+      deliveryIntersection: this.deliveryIntersection
+    });
+
+    console.log(this.deliveriesToAdd);
+    this.clearSelection();
+  }
+
+  clearDeliveries() {
+    this.deliveriesToAdd = [];
   }
 
   private addRoads(roads : Road[], colorRoad: string): void {
