@@ -9,6 +9,7 @@ import { Courier } from '../courier'; // Import Courier interface
 import { Map } from '../map';
 import { CommonModule } from '@angular/common';
 import { Delivery } from '../delivery';
+import { Tour } from '../tour';
 
 @Component({
   selector: 'app-map',
@@ -30,6 +31,8 @@ export class MapComponent {
   pickupIntersection: Intersection | null = null;
   deliveryIntersection: Intersection | null = null;
   deliveriesToAdd: Delivery[] = [];
+  // a list of 20 colors to use for roads
+  colors = ['red', 'blue', 'green', 'yellow', 'purple', 'orange', 'brown', 'pink', 'black', 'white', 'gray', 'cyan', 'magenta', 'olive', 'lime', 'teal', 'navy', 'maroon', 'silver', 'gold'];
 
 
   isLoading = false; // State to track loading status
@@ -80,15 +83,13 @@ export class MapComponent {
           }
 
           formData.append('couriers', JSON.stringify(this.selectedCouriers));
+          console.log(JSON.stringify(this.selectedCouriers));
+          console.log(JSON.stringify(this.deliveriesToAdd));
           formData.append('deliveriesAdded', JSON.stringify(this.deliveriesToAdd));
-          this.http.post<Map>(`${this.baseLink}${typeToSend}/parseAndGetBestRoute`, formData).subscribe((data) => {
+          this.http.post<Tour[]>(`${this.baseLink}${typeToSend}/parseAndGetBestRoutePerCourier`, formData).subscribe((data) => {
             console.log("data "+ data);
             if(!data) {
               alert('Error while parsing the XML file');
-              return;
-            }
-            if (data.intersections.length === 0 && data.roads.length === 0) {
-              alert('No data found in the XML file or the XML file is not well formatted as a map, no roads or intersections found');
               return;
             }
             this.loadDelivery(data);
@@ -141,14 +142,21 @@ export class MapComponent {
 
 
   // NOT FINSIHED, DEPENDING ON THE RESPONSE OF THE BACKEND
-  private loadDelivery(data : Map) {
+  private loadDelivery(data : Tour[]) {
     if(this.mapOpened && !this.mapReset) {
       this.removeMarkers();
     }
+
+    let colorCounter = 0;
+    data.forEach((tour) => {
+      this.addIntersections(tour.route.intersections, "circle-red.svg", [12, 12], false); 
+      this.addRoads(tour.route.roads, this.colors[colorCounter]);
+      colorCounter++;
     
-    this.addIntersections(data.intersections, "circle-red.svg", [12, 12], false); 
-    this.addRoads(data.roads, 'red');
+    });
     this.mapReset = false;
+    
+    
   }
 
 
@@ -307,9 +315,8 @@ export class MapComponent {
     }
 
     this.deliveriesToAdd.push({
-      id: this.deliveriesToAdd.length,
-      pickupIntersection: this.pickupIntersection,
-      deliveryIntersection: this.deliveryIntersection
+      origin: this.pickupIntersection,
+      destination: this.deliveryIntersection
     });
 
     console.log(this.deliveriesToAdd);
