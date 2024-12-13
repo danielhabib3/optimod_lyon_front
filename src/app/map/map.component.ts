@@ -135,7 +135,7 @@ export class MapComponent {
       this.removeMarkers();
     }
     
-    this.addIntersections(data.intersections, "circle-blue.svg", [12, 12], true); 
+    this.addIntersections(data.intersections, "circle-blue.svg", [12, 12], true, ""); 
     this.addRoads(data.roads, 'blue');
     this.mapReset = false;
   }
@@ -149,7 +149,16 @@ export class MapComponent {
 
     let colorCounter = 0;
     data.forEach((tour) => {
-      this.addIntersections(tour.route.intersections, "circle-red.svg", [12, 12], false); 
+
+      const pickupIntersections: Intersection[] = tour.deliveryRequest.deliveries.map(delivery => delivery.origin);
+      const deliveryIntersections: Intersection[] = tour.deliveryRequest.deliveries.map(delivery => delivery.destination);
+      const warehouseIntersection: Intersection = tour.deliveryRequest.warehouse.address;
+      this.addIntersections([warehouseIntersection], "warehouse.svg", [18, 18], false, "");
+      this.addIntersections(pickupIntersections, "pickup.svg", [18, 18], false, "");
+      this.addIntersections(deliveryIntersections, "delivery.svg", [18, 18], false, "");
+      
+      const otherIntersections: Intersection[] = tour.route.intersections;
+      this.addIntersections(otherIntersections, "", [12, 12], false, this.colors[colorCounter]); 
       this.addRoads(tour.route.roads, this.colors[colorCounter]);
       colorCounter++;
     
@@ -245,23 +254,44 @@ export class MapComponent {
     this.mapOpened = true;
   }
 
-  private addIntersections(locations : Intersection[], iconPath : string, iconSize: [number, number] = [6, 6], ifMap: boolean): void { 
+  private addIntersections(locations : Intersection[], iconPath : string, iconSize: [number, number] = [6, 6], ifMap: boolean, color: string): void { 
   
       console.log(locations);
-  
-      var customIcon = L.icon({
-        iconUrl: iconPath,
-        iconSize: iconSize // Adjust size as needed
-      });
+
+      let markerIsPhoto = true;
+      if (iconPath === "") {
+        markerIsPhoto = false;
+      }
+      
+      if(markerIsPhoto) {
+        var customIcon = L.icon({
+          iconUrl: iconPath,
+          iconSize: iconSize // Adjust size as needed
+        });
+     }
 
 
-    // Create a LayerGroup
-    this.markersGroup = L.layerGroup().addTo(this.map);
+    // If markersGroup already exists and contains markers, add them to the new LayerGroup
+    if (!(this.markersGroup && this.markersGroup.getLayers().length > 0)) {
+      this.markersGroup = L.layerGroup().addTo(this.map);
+    }
 
     // Add a marker to the map
     locations.forEach((location) => {
-      var marker = L.marker([Number(location.latitude), Number(location.longitude)], { icon: customIcon }).addTo(this.markersGroup);
-      
+      let marker: L.Marker<any> | L.Circle<any>;
+      if(markerIsPhoto) {
+        marker = L.marker([Number(location.latitude), Number(location.longitude)], { icon: customIcon }).addTo(this.markersGroup);
+      }
+      else {
+        marker = L.circle([Number(location.latitude), Number(location.longitude)], {
+          color: color,          // Circle border color
+          fillColor: color,     // Circle fill color
+          fillOpacity: 0.5,      // Circle fill opacity
+          radius: 10          // Radius in meters
+        }).addTo(this.markersGroup);
+      }
+
+
       if (ifMap) {     
         marker.on('click', (event) => {
           console.log('Marker ' + location.id + ' clicked!', event);
