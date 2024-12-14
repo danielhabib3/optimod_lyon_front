@@ -385,14 +385,16 @@ export class MapComponent {
       alert('Please select a tour to save');
       return;
     }
+    const formData = new FormData();
+    formData.append('tour', JSON.stringify(this.tourToSave));
+    console.log("tourtosave " + JSON.stringify(this.tourToSave));
 
-    this.http.post<Tour>(`${this.baseLink}tours`, this.tourToSave).subscribe((tour) => {
-      console.log(tour);
+    this.http.post(`${this.baseLink}deliveryRequest/saveTour`, formData).subscribe(() => {
       alert('Tour saved successfully');
     }, error => {
       console.error('Error saving tour', error);
       alert('Error saving tour');
-    }); 
+    });
   }
 
 
