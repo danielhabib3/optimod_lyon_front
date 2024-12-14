@@ -24,6 +24,7 @@ export class MapComponent {
   xmlFile: File | null = null; // xml file of the map 
   allowedMapsToDisplay = ['petitPlan.json', 'moyenPlan.json', 'grandPlan.json'];
   mapOpened: boolean = false;
+  restoreTours: boolean = false;
   mapReset: boolean = true;
   allCouriers: Courier[] = [];
   selectedCouriers: Courier[] = [];

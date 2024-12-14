@@ -106,8 +106,25 @@
                 <span *ngIf="toggleTours" class="arrow">⬇</span>
             </button>
             <div *ngIf="toggleTours" class="drop-down-menu">
-                <button class="btn mt-3 w-full">Save tours</button>
-                <button class="btn mt-3 w-full">Restore tours</button>
+                <button (click)="saveTour()" class="btn mt-3 w-full">Save tours</button>
+                <button (click)="restoreTours()" class="btn mt-3 w-full">Restore tours</button>
+            </div>
+            <div *ngIf="restoreTours" class="overflow-x-auto">
+                <table class="table w-full">
+                    <!-- head -->
+                    <thead>
+                        <tr class="flex text-neutral">
+                            <th>ID</th>
+                            <th>Courier</th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-neutral-light">
+                        <tr class="flex" *ngFor="let tour of savedTours">
+                            <td>{{ tour.id }}</td>
+                            <td>{{ tour.courier.name }}</td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
