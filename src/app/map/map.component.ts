@@ -34,6 +34,8 @@ export class MapComponent {
   deliveriesToAdd: Delivery[] = [];
   // a list of 20 colors to use for roads
   colors = ['red', 'blue', 'green', 'yellow', 'purple', 'orange', 'brown', 'pink', 'black', 'white', 'gray', 'cyan', 'magenta', 'olive', 'lime', 'teal', 'navy', 'maroon', 'silver', 'gold'];
+  currentTours: Tour[] = [];
+  tourToSave: Tour | null = null;
 
 
   isLoading = false; // State to track loading status
@@ -148,6 +150,8 @@ export class MapComponent {
       this.removeMarkers();
     }
 
+    this.currentTours = [];
+
     let colorCounter = 0;
     data.forEach((tour) => {
 
@@ -162,6 +166,8 @@ export class MapComponent {
       this.addIntersections(otherIntersections, "", [12, 12], false, this.colors[colorCounter]); 
       this.addRoads(tour.route.roads, this.colors[colorCounter]);
       colorCounter++;
+
+      this.currentTours.push(tour);
     
     });
     this.mapReset = false;
@@ -368,6 +374,25 @@ export class MapComponent {
       // Draw a line between the two points
       var line = L.polyline([[origin.latitude, origin.longitude], [destination.latitude, destination.longitude]], { color: colorRoad }).addTo(this.markersGroup);
     });
+  }
+
+  selectTour(tour: Tour) {
+    this.tourToSave = tour;
+  }
+
+  saveTour() {
+    if (!this.tourToSave) {
+      alert('Please select a tour to save');
+      return;
+    }
+
+    this.http.post<Tour>(`${this.baseLink}tours`, this.tourToSave).subscribe((tour) => {
+      console.log(tour);
+      alert('Tour saved successfully');
+    }, error => {
+      console.error('Error saving tour', error);
+      alert('Error saving tour');
+    }); 
   }
 
 

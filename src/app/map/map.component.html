@@ -105,9 +105,31 @@
                 <span *ngIf="!toggleTours" class="arrow">⬅</span>
                 <span *ngIf="toggleTours" class="arrow">⬇</span>
             </button>
+
+            <table class="table w-full">
+                <!-- head -->
+                <thead>
+                    <tr class="flex text-neutral">
+                        <th>ID</th>
+                        <th>Name</th>
+                    </tr>
+                </thead>
+                <tbody class="text-neutral-light">
+                    <tr class="flex cursor-pointer" *ngFor="let tour of currentTours" (click)="selectTour(tour)">
+                        <td>{{ tour.deliveryRequest.courier.id }}</td>
+                        <td>{{ tour.deliveryRequest.courier.name }}</td>
+                        <td [style.color]="colors[currentTours.indexOf(tour) % colors.length]">{{ colors[currentTours.indexOf(tour) % colors.length] }}</td>
+                    </tr>
+                </tbody>
+            </table>
+
+
+
             <div *ngIf="toggleTours" class="drop-down-menu">
                 <button (click)="saveTour()" class="btn mt-3 w-full">Save tours</button>
+                <!--
                 <button (click)="restoreTours()" class="btn mt-3 w-full">Restore tours</button>
+                -->
             </div>
             <div *ngIf="restoreTours" class="overflow-x-auto">
                 <table class="table w-full">
@@ -119,10 +141,12 @@
                         </tr>
                     </thead>
                     <tbody class="text-neutral-light">
+                        <!--
                         <tr class="flex" *ngFor="let tour of savedTours">
                             <td>{{ tour.id }}</td>
                             <td>{{ tour.courier.name }}</td>
                         </tr>
+                        -->
                     </tbody>
                 </table>
             </div>
@@ -146,24 +170,3 @@
 
     <div id="map" class="w-full h-full"></div>
 </div>
-
-
-
-<!--
-        <div style="margin-bottom: 20px;">
-            <h3>Delivery Requests</h3>
-            <label for="courierSelect" style="display: block; margin-bottom: 5px;">Select Courier:</label>
-
-            <select id="courierSelect" name="courierSelect" style="display: block; width: 100%; margin-bottom: 10px;">
-                <option *ngFor="let courier of couriers" [value]="courier.id">{{ courier.name }}</option>
-            </select>
-            
-            <label for="pickupLocation" style="display: block; margin-bottom: 5px;">Pickup Location:</label>
-            <input id="pickupLocation" name="pickupLocation" placeholder="Enter address"
-                style="display: block; width: 100%; margin-bottom: 10px;" />
-            <label for="deliveryLocation" style="display: block; margin-bottom: 5px;">Delivery Location:</label>
-            <input id="deliveryLocation" name="deliveryLocation" placeholder="Enter address"
-                style="display: block; width: 100%; margin-bottom: 10px;" />
-            <button style="display: block; width: 100%;">Add Delivery Request</button>
-        </div>
-        -->
