@@ -109,6 +109,10 @@
 
 
             <div *ngIf="toggleTours" class="drop-down-menu">
+                
+
+                <button (click)="saveTour()" class="btn mt-3 w-full">Save tours</button>
+
                 <table class="table w-full">
                     <!-- head -->
                     <thead>
@@ -131,30 +135,39 @@
                     </tbody>
                 </table>
 
-                <button (click)="saveTour()" class="btn mt-3 w-full">Save tours</button>
-                <!--
-                <button (click)="restoreTours()" class="btn mt-3 w-full">Restore tours</button>
-                -->
-            </div>
-            <div *ngIf="restoreTours" class="overflow-x-auto">
+                <button (click)="restoreShowTours()" class="btn mt-3 w-full">Restore tours</button>
+
                 <table class="table w-full">
                     <!-- head -->
                     <thead>
-                        <tr class="flex text-neutral">
-                            <th>ID</th>
-                            <th>Courier</th>
+                        <tr class="text-neutral">
+                            <th>Tour ID</th>
+                            <th>Courier ID</th>
+                            <th>Courier Name</th>
                         </tr>
                     </thead>
                     <tbody class="text-neutral-light">
-                        <!--
-                        <tr class="flex" *ngFor="let tour of savedTours">
+                        <tr class="cursor-pointer" *ngFor="let tour of restoredTours">
                             <td>{{ tour.id }}</td>
-                            <td>{{ tour.courier.name }}</td>
+                            <td>{{ tour.deliveryRequest.courier.id }}</td>
+                            <td>{{ tour.deliveryRequest.courier.name }}</td>
+                            <td>
+                                <div [style.background-color]="colors[restoredTours.indexOf(tour) % colors.length]" style="width: 20px; height: 20px;"></div>
+                            </td>
+                            <td>
+                                <input type="radio" name="selectedTourRestore" (click)="selectTourRestore(tour)" />
+                            </td>
                         </tr>
-                        -->
                     </tbody>
                 </table>
-            </div>
+
+                
+
+                <button (click)="restoreSelectedTour()" class="btn mt-3 w-full">Restore</button>
+
+                <button (click)="clearMap()" class="btn mt-3 w-full">Clear map</button>
+
+            </div>            
         </div>
     </div>
 

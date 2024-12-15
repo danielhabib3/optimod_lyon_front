@@ -24,7 +24,6 @@ export class MapComponent {
   xmlFile: File | null = null; // xml file of the map 
   allowedMapsToDisplay = ['petitPlan.json', 'moyenPlan.json', 'grandPlan.json'];
   mapOpened: boolean = false;
-  restoreTours: boolean = false;
   mapReset: boolean = true;
   allCouriers: Courier[] = [];
   selectedCouriers: Courier[] = [];
@@ -36,6 +35,9 @@ export class MapComponent {
   colors = ['red', 'blue', 'green', 'yellow', 'purple', 'orange', 'brown', 'pink', 'black', 'white', 'gray', 'cyan', 'magenta', 'olive', 'lime', 'teal', 'navy', 'maroon', 'silver', 'gold'];
   currentTours: Tour[] = [];
   tourToSave: Tour | null = null;
+  restoredTours: Tour[] = [];
+  tourToRestore: Tour | null = null;
+  currentColorIndex = 0;
 
 
   isLoading = false; // State to track loading status
@@ -143,8 +145,21 @@ export class MapComponent {
     this.mapReset = false;
   }
 
+  private loadTour(tourToLoad: Tour) {
+    const pickupIntersections: Intersection[] = tourToLoad.deliveryRequest.deliveries.map(delivery => delivery.origin);
+      const deliveryIntersections: Intersection[] = tourToLoad.deliveryRequest.deliveries.map(delivery => delivery.destination);
+      const warehouseIntersection: Intersection = tourToLoad.deliveryRequest.warehouse.address;
+      this.addIntersections([warehouseIntersection], "warehouse.svg", [18, 18], false, "");
+      this.addIntersections(pickupIntersections, "pickup.svg", [18, 18], false, "");
+      this.addIntersections(deliveryIntersections, "delivery.svg", [18, 18], false, "");
+      
+      const otherIntersections: Intersection[] = tourToLoad.route.intersections;
+      this.addIntersections(otherIntersections, "", [12, 12], false, this.colors[this.currentColorIndex]); 
+      this.addRoads(tourToLoad.route.roads, this.colors[this.currentColorIndex]);
 
-  // NOT FINSIHED, DEPENDING ON THE RESPONSE OF THE BACKEND
+      this.currentColorIndex++;
+  }
+
   private loadDelivery(data : Tour[]) {
     if(this.mapOpened && !this.mapReset) {
       this.removeMarkers();
@@ -396,6 +411,40 @@ export class MapComponent {
       alert('Error saving tour');
     });
   }
+
+  restoreShowTours() {
+    this.http.get<Tour[]>(`${this.baseLink}deliveryRequest/restoreTours`).subscribe((data) => {
+      console.log(data);
+      if (data.length === 0) {
+      alert('No saved tours found');
+      return;
+      }
+      this.restoredTours = data;
+    }, error => {
+      console.error('Error loading saved tours', error);
+      alert('Error loading saved tours');
+    });
+
+  }
+
+  selectTourRestore(tour: Tour) {
+    this.tourToRestore = tour;
+  }
+
+
+  restoreSelectedTour() {
+    if (!this.tourToRestore) {
+      alert('Please select a tour to restore');
+      return;
+    }
+    this.loadTour(this.tourToRestore);
+  }
+
+  clearMap() {
+    this.resetMap();
+    this.currentColorIndex = 0;
+  }
+
 
 
   ngOnInit() {
