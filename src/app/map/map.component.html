@@ -112,7 +112,6 @@
             <div *ngIf="toggleTours" class="drop-down-menu">
                 
 
-                <button (click)="saveTour()" class="btn mt-3 w-full">Save tours</button>
 
                 <table class="table w-full">
                     <!-- head -->
@@ -136,6 +135,8 @@
                     </tbody>
                 </table>
 
+                <button (click)="saveTour()" class="btn mt-3 w-full">Save tours</button>
+
                 <button (click)="restoreShowTours()" class="btn mt-3 w-full">Restore tours</button>
 
                 <table class="table w-full">
@@ -152,9 +153,11 @@
                             <td>{{ tour.id }}</td>
                             <td>{{ tour.deliveryRequest.courier.id }}</td>
                             <td>{{ tour.deliveryRequest.courier.name }}</td>
+                            <!--
                             <td>
                                 <div [style.background-color]="colors[restoredTours.indexOf(tour) % colors.length]" style="width: 20px; height: 20px;"></div>
                             </td>
+                            -->
                             <td>
                                 <input type="radio" name="selectedTourRestore" (click)="selectTourRestore(tour)" />
                             </td>

@@ -157,7 +157,7 @@ export class MapComponent {
       this.addIntersections(otherIntersections, "", [12, 12], false, this.colors[this.currentColorIndex]); 
       this.addRoads(tourToLoad.route.roads, this.colors[this.currentColorIndex]);
 
-      this.currentColorIndex++;
+      this.currentColorIndex = (this.currentColorIndex + 1) % this.colors.length;
   }
 
   private loadDelivery(data : Tour[]) {
