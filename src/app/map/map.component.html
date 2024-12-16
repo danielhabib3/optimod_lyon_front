@@ -33,10 +33,11 @@
 
             <div *ngIf="toggleCourrier" class="drop-down-menu">
                 <label for="courierCount">Number of Couriers</label>
-                <input type="number" min="1" id="courierCount" name="courierCount" value="1"
+                <input type="number" min="1" id="courierCount" name="courierCount" value="1" (change)="confirmCourierCount()"
                     class="input input-bordered w-full text-black" />
+                <!--
                 <button (click)="confirmCourierCount()" class="btn mt-3 block w-full">Confirm</button>
-
+                -->
                 <label class="pt-6">Select Courier</label>
                 <select id="courierNames" name="courierNames" class="select select-bordered w-full text-black">
                     <option value="" disabled selected>None</option>
