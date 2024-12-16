@@ -443,6 +443,7 @@ export class MapComponent {
   clearMap() {
     this.resetMap();
     this.currentColorIndex = 0;
+    this.currentTours = [];
   }
 
 

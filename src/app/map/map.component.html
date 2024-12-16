@@ -13,9 +13,10 @@
             </button>
             <div *ngIf="toggleLoading" class="drop-down-menu">
                 <label>Map File</label>
-                <input type="file" id="mapFile" class="file-input file-input-bordered w-full text-black" />
+                <input type="file" id="mapFile" (change)="sendXMLtoBack('map')" class="file-input file-input-bordered w-full text-black" />
+                <!--
                 <button (click)="sendXMLtoBack('map')" class="btn mt-3 block w-full">Submit Map</button>
-
+                -->
                 <label class="pt-6">Delivery Requests File</label>
                 <input type="file" id="deliveryRequestFile" class="file-input file-input-bordered w-full text-black" />
                 <label class="italic">Please fill the courrier section to submit</label>
