@@ -117,13 +117,13 @@
                 <table class="table w-full">
                     <!-- head -->
                     <thead>
-                        <tr class="flex text-neutral">
+                        <tr class="text-neutral">
                             <th>ID</th>
                             <th>Name</th>
                         </tr>
                     </thead>
                     <tbody class="text-neutral-light">
-                        <tr class="flex cursor-pointer" *ngFor="let tour of currentTours">
+                        <tr class="cursor-pointer" *ngFor="let tour of currentTours">
                             <td>{{ tour.deliveryRequest.courier.id }}</td>
                             <td>{{ tour.deliveryRequest.courier.name }}</td>
                             <td>
