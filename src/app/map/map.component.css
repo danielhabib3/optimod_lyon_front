@@ -17,9 +17,7 @@ label {
 
 .drop-down-menu {
   background-color: var(--color-secondary-dark);
-  padding-left: 5%;
-  padding-top: 5%;
-  padding-bottom: 5%;
+  padding: 5%;
 }
 
 .drop-down-button {
