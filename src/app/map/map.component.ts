@@ -168,25 +168,38 @@ export class MapComponent {
     this.currentTours = [];
 
     let colorCounter = 0;
+    let error = false;
     data.forEach((tour) => {
 
-      const pickupIntersections: Intersection[] = tour.deliveryRequest.deliveries.map(delivery => delivery.origin);
-      const deliveryIntersections: Intersection[] = tour.deliveryRequest.deliveries.map(delivery => delivery.destination);
-      const warehouseIntersection: Intersection = tour.deliveryRequest.warehouse.address;
-      this.addIntersections([warehouseIntersection], "warehouse.svg", [18, 18], false, "");
-      this.addIntersections(pickupIntersections, "pickup.svg", [18, 18], false, "");
-      this.addIntersections(deliveryIntersections, "delivery.svg", [18, 18], false, "");
-      
-      const otherIntersections: Intersection[] = tour.route.intersections;
-      this.addIntersections(otherIntersections, "", [12, 12], false, this.colors[colorCounter]); 
-      this.addRoads(tour.route.roads, this.colors[colorCounter]);
-      colorCounter++;
+      if (tour.route.id === -10){
+        alert('The map is not connected to some intersection, the deliveries of ' + tour.deliveryRequest.courier.name + ' were ignored');
+      } else if (tour.route.id === -20) {
+        error = true;
+      }
+      else {
 
-      this.currentTours.push(tour);
-    
+        const pickupIntersections: Intersection[] = tour.deliveryRequest.deliveries.map(delivery => delivery.origin);
+        const deliveryIntersections: Intersection[] = tour.deliveryRequest.deliveries.map(delivery => delivery.destination);
+        const warehouseIntersection: Intersection = tour.deliveryRequest.warehouse.address;
+        this.addIntersections([warehouseIntersection], "warehouse.svg", [18, 18], false, "");
+        this.addIntersections(pickupIntersections, "pickup.svg", [18, 18], false, "");
+        this.addIntersections(deliveryIntersections, "delivery.svg", [18, 18], false, "");
+        
+        const otherIntersections: Intersection[] = tour.route.intersections;
+        this.addIntersections(otherIntersections, "", [12, 12], false, this.colors[colorCounter]); 
+        this.addRoads(tour.route.roads, this.colors[colorCounter]);
+        colorCounter++;
+
+        this.currentTours.push(tour);
+      }
     });
-    this.mapReset = false;
-    
+
+    if(error) {
+      alert('The map is broken, some roads have negative distances, the deliveries were ignored. Please load a new map');
+    }
+    else{
+      this.mapReset = false;
+    }
     
   }
 
